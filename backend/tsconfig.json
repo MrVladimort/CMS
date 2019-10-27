@@ -1,0 +1,29 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "lib": [
+      "esnext"
+    ],
+    "alwaysStrict": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "outDir": "build",
+    "baseUrl": ".",
+    "pretty": true,
+    "declaration": true,
+    "paths": {
+      "*": [
+        "node_modules/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ]
+}
