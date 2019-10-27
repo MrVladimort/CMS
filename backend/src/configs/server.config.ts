@@ -23,7 +23,7 @@ const config: IServerConfig = {
     serverUrl: "http://localhost:8080/api",
     clientUrl: "http://localhost:3000",
     port: 8080,
-    dbURI: "mongodb://localhost:27017/cms_pro",
+    dbURI: "mongodb://admin:admin123@ds115874.mlab.com:15874/cms_pro",
     dbOptions: {
         useNewUrlParser: true,
         useCreateIndex: true,
