@@ -17,6 +17,7 @@ const Options = {
         toJSON: {
             transform: (doc: InstanceType<Post>, ret: InstanceType<Post>, options: any) => {
                 delete ret._id;
+                delete ret.id;
                 return ret;
             },
             versionKey: false,

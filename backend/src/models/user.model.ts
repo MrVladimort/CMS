@@ -78,10 +78,10 @@ const Options = {
         toJSON: {
             transform: (doc: InstanceType<User>, ret: InstanceType<User>, options: any) => {
                 delete ret._id;
+                delete ret.id;
                 delete ret.passHash;
                 delete ret.passSalt;
                 delete ret.verified;
-                delete ret.id;
                 return ret;
             },
             versionKey: false,

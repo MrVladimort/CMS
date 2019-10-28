@@ -35,7 +35,7 @@ class PostEditPage extends Component<IPostEditPageProps, IPostEditPageState> {
         this.setState({post: postResponse.post});
     }
 
-    submitEditPage = async (postData: IPostEditFormData) => postApi.createPost(postData).then((postResponse) => this.props.history.push(`/event?postId=${postResponse.post.postId}`));
+    submitEditPage = async (postData: IPostEditFormData) => postApi.createPost(postData).then((postResponse) => this.props.history.push(`/post?postId=${postResponse.post.postId}`));
 
     render() {
         const {post} = this.state;

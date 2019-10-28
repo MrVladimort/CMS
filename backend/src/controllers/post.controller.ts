@@ -5,7 +5,7 @@ import PostModel, {Post} from "../models/post.model";
 
 export async function getPost(req: Request, res: Response, next: NextFunction) {
     const postId = req.params.id;
-    const post = await PostModel.findById(parseInt(postId, 10));
+    const post = await PostModel.findOne({postId});
     res.json({post, success: true, status: 200});
 }
 
@@ -41,7 +41,7 @@ export async function editPost(req: Request, res: Response, next: NextFunction) 
 }
 
 export async function deletePost(req: Request, res: Response, next: NextFunction) {
-    const eventId = req.params.id;
-    await PostModel.findOneAndDelete({eventId});
+    const postId = req.params.id;
+    await PostModel.findOneAndDelete({postId});
     res.json({success: true, status: 200});
 }

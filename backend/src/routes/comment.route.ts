@@ -5,7 +5,7 @@ import {commentValidator} from "../validators/comment.validator";
 
 const router = Router();
 
-router.get("/event/:id", getAllCommentsByPostId);
+router.get("/post/:id", getAllCommentsByPostId);
 router.get("/:id", getComment);
 router.get("/", getAllComments);
 router.put("/:id", editComment);

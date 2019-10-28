@@ -20,10 +20,10 @@ class PostActionContainer extends Component<IPostProps> {
         return (
             <Segment raised>
                 <Button.Group>
-                    {user && user.userType === 2 && <Link to={`/event/delete?postId=${post.postId}`}>
+                    {user && user.userType === 2 && <Link to={`/post/delete?postId=${post.postId}`}>
                         <Button>Delete</Button>
                     </Link>}
-                    {user && user.userType === 2 && <Link to={`/event/edit?postId=${post.postId}`}>
+                    {user && user.userType === 2 && <Link to={`/post/edit?postId=${post.postId}`}>
                         <Button>Edit</Button>
                     </Link>}
                 </Button.Group>

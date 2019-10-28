@@ -37,8 +37,8 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
         return (
             <Container text>
                 <Segment>
-                    <Link to={`/event/add`}>
-                        <Button>Add Event"}</Button>>
+                    <Link to={`/post/add`}>
+                        <Button fluid>Add post</Button>
                     </Link>
                     {posts && posts.map(post => <PostContainer post={post} key={`post:${post.postId}`}/>)}
                 </Segment>

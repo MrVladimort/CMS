@@ -13,7 +13,7 @@ interface IPostAddPageProps {
 class PostAddPage extends Component<IPostAddPageProps> {
     static propTypes = {};
 
-    submitAddPage = async (postData: IPostAddFormData) => postApi.createPost(postData).then((postResponse) => this.props.history.push(`/event/${postResponse.post.postId}`));
+    submitAddPage = async (postData: IPostAddFormData) => postApi.createPost(postData).then((postResponse) => this.props.history.push(`/post/exact?postId=${postResponse.post.postId}`));
 
     render() {
         return (

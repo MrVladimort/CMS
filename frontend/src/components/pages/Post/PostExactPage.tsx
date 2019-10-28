@@ -53,7 +53,7 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
     onDeleteClick = async () => {
         const {post} = this.state;
         await postApi.deletePost(post.postId);
-        this.props.history.push("/event");
+        this.props.history.push("/post");
     };
 
     render() {
@@ -66,9 +66,11 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
                     {post && <Segment>
                         <PostActionContainer delete={this.onDeleteClick} post={post} user={user}/>
                     </Segment>}
-                    <CommentAddForm submit={this.submitCreateComment}/>
-                    {comments && comments.map(comment => <CommentContainer key={`comment: ${comment.commentId}`}
-                                                                           user={user} comment={comment}/>)}
+                    <Segment>
+                        <CommentAddForm submit={this.submitCreateComment}/>
+                        {comments && comments.map(comment => <CommentContainer key={`comment: ${comment.commentId}`}
+                                                                               user={user} comment={comment}/>)}
+                    </Segment>
                 </Segment>
             </Container>
         )
