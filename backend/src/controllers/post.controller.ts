@@ -5,8 +5,8 @@ import PostModel, {Post} from "../models/post.model";
 
 export async function getPost(req: Request, res: Response, next: NextFunction) {
     const postId = req.params.id;
-    const eventData = await PostModel.findById(parseInt(postId, 10));
-    res.json({eventData, success: true, status: 200});
+    const post = await PostModel.findById(parseInt(postId, 10));
+    res.json({post, success: true, status: 200});
 }
 
 export async function getAllPosts(req: Request, res: Response, next: NextFunction) {

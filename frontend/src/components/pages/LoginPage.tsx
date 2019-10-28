@@ -1,14 +1,9 @@
-import * as React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Container, Header} from 'semantic-ui-react';
 import {connect} from "react-redux";
 import authActions from "../../redux/actions/auth";
-import LoginForm from "../forms/LoginForm";
-
-interface ILoginFormData {
-    email: string,
-    pass: string,
-}
+import LoginForm, {ILoginFormData} from "../forms/LoginForm";
 
 interface ILoginPageProps {
     loginEmailAndPass: Function
@@ -17,10 +12,10 @@ interface ILoginPageProps {
     }
 }
 
-class LoginPage extends React.Component<ILoginPageProps> {
+class LoginPage extends Component<ILoginPageProps> {
     static propTypes: any;
 
-    submit = (emailAndPass: ILoginFormData) => this.props.loginEmailAndPass(emailAndPass).then(() => this.props.history.push("/user"));
+    submitLogin = async (emailAndPass: ILoginFormData) => this.props.loginEmailAndPass(emailAndPass).then(() => this.props.history.push("/user"));
 
     render() {
         return (
@@ -29,7 +24,7 @@ class LoginPage extends React.Component<ILoginPageProps> {
                     <Header as='h1' color='blue'>Log In</Header>
                 </Container>
                 <Container text>
-                    <LoginForm submit={this.submit}/>
+                    <LoginForm submit={this.submitLogin}/>
                 </Container>
             </div>
         )

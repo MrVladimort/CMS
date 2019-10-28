@@ -18,7 +18,7 @@ const store = createStore(
 
 async function init() {
     try {
-        const token = localStorage.getItem('TIN_ticket');
+        const token = localStorage.getItem('CMS_pro');
         if (token) {
             setAuthorizationHeader(token);
             console.log(token);
@@ -26,7 +26,7 @@ async function init() {
         }
     } catch (err) {
         console.log(err);
-        localStorage.removeItem("TIN_ticket");
+        localStorage.removeItem("CMS_pro");
         setAuthorizationHeader();
     }
 

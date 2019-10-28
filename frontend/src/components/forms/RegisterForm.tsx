@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {Component} from 'react';
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { Container, Form, Header } from "semantic-ui-react";
@@ -13,20 +13,20 @@ export interface IRegisterFormData {
   surname: string,
 }
 
-interface IRegisterPageProps {
+interface IRegisterFormProps {
   submit: Function
 }
 
-interface IRegisterPageState {
+interface IRegisterFormState {
   formData: IRegisterFormData,
   loading: boolean,
   errors: any,
 }
 
-class RegisterForm extends React.Component<IRegisterPageProps, IRegisterPageState> {
+class RegisterForm extends Component<IRegisterFormProps, IRegisterFormState> {
   static propTypes: any;
 
-  constructor(props: IRegisterPageProps) {
+  constructor(props: IRegisterFormProps) {
     super(props);
 
     this.state = {

@@ -1,11 +1,15 @@
-import {instanceMethod, InstanceType, ModelType, plugin, prop, staticMethod, Typegoose} from "typegoose";
+import {instanceMethod, InstanceType, ModelType, plugin, prop, Ref, staticMethod, Typegoose} from "typegoose";
 import {AutoIncrement} from "./index";
+import {User} from "./user.model";
 
 @plugin(AutoIncrement, {inc_field: "postId"})
 export class Post extends Typegoose {
     @prop({unique: true}) public postId: number;
     @prop({required: true}) public text: string;
-    @prop({required: true, unique: true}) public name: string;
+    @prop({}) public imageLink: string;
+    @prop({required: true, unique: true}) public title: string;
+    @prop({required: true, ref: User}) public User: Ref<User>;
+    @prop({required: true, default: 0}) public views: number;
 }
 
 const Options = {

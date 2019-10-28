@@ -17,7 +17,7 @@ export async function sendRegisterConfirmation(email: string, token: string): Pr
     const mailOptions = {
         from: accessConfig.mailer.from,
         to: email,
-        subject: "Hello from Tin_Pro, click to link below to confirm your registration",
+        subject: "Hello from CMS, click to link below to confirm your registration",
         html: `<h1>Click on link to confirm your registration</h1><a href="${confirmationUrl}/">Click</a>`,
     };
     await transporter.sendMail(mailOptions);

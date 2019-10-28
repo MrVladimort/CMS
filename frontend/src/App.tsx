@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import {Route} from 'react-router-dom';
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
@@ -18,6 +18,11 @@ import RegisterPage from "./components/pages/RegisterPage";
 import UserPage from "./components/pages/UserPage";
 import ConfirmEmailPage from "./components/pages/ConfirmEmailPage";
 
+import PostPage from "./components/pages/Post/PostPage";
+import PostExactPage from "./components/pages/Post/PostExactPage";
+import PostAddPage from "./components/pages/Post/PostAddPage";
+import PostEditPage from "./components/pages/Post/PostEditPage";
+
 const App = ({location, dispatch, history}: any) => (
     <div className="reactBody">
         <Header location={location} dispatch={dispatch} history={history}/>
@@ -26,6 +31,11 @@ const App = ({location, dispatch, history}: any) => (
             <Route path="/login" exact component={LoginPage}/>
             <Route path="/register" exact component={RegisterPage}/>
             <Route path="/confirm-email" exact component={ConfirmEmailPage}/>
+
+            <Route path="/post" exact component={PostPage}/>
+            <Route path="/post/exact" exact component={PostExactPage}/>
+            <Route path="/post/add" exact component={PostAddPage}/>
+            <Route path="/post/edit" exact component={PostEditPage}/>
 
             <PrivateRoute path="/user" exact component={UserPage}/>
         </div>

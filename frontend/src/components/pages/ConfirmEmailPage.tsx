@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import authActions from "../../redux/actions/auth";
@@ -13,10 +13,10 @@ interface IConfirmEmailPageProps {
 }
 
 
-class ConfirmEmailPage extends React.Component<IConfirmEmailPageProps> {
+class ConfirmEmailPage extends Component<IConfirmEmailPageProps> {
     static propTypes = {};
 
-    componentDidMount = async () => {
+    async componentDidMount(): Promise<void> {
         const query = new URLSearchParams(this.props.location.search);
         const token = query.get('token');
 

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {Container, Header} from 'semantic-ui-react';
@@ -11,10 +11,10 @@ interface IRegisterPageProps {
     }
 }
 
-class RegisterPage extends React.Component<IRegisterPageProps> {
+class RegisterPage extends Component<IRegisterPageProps> {
     static propTypes: any;
 
-    submit = (registerData: IRegisterFormData) => authApi.register(registerData).then(() => this.props.history.push("/confirm-email"));
+    submitRegister = async (registerData: IRegisterFormData) => authApi.register(registerData).then(() => this.props.history.push("/confirm-email"));
 
     render() {
         return (
@@ -23,7 +23,7 @@ class RegisterPage extends React.Component<IRegisterPageProps> {
                     <Header as='h1' color='blue'>Registration</Header>
                 </Container>
                 <Container text>
-                    <RegisterForm submit={this.submit}/>
+                    <RegisterForm submit={this.submitRegister}/>
                 </Container>
             </Container>
         );

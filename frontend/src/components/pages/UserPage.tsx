@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {UserDTO} from "../../types";
@@ -12,7 +12,7 @@ interface IUserPageProps {
     },
 }
 
-class UserPage extends React.Component<IUserPageProps> {
+class UserPage extends Component<IUserPageProps> {
     static propTypes = {};
 
     render() {

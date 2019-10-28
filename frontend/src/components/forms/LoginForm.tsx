@@ -9,20 +9,20 @@ export interface ILoginFormData {
     pass: string,
 }
 
-interface ILoginPageState {
+interface ILoginFormState {
     formData: ILoginFormData,
     errors: any,
     loading: boolean
 }
 
-interface ILoginPageProps {
+interface ILoginFormProps {
     submit: Function
 }
 
-class LoginForm extends Component<ILoginPageProps, ILoginPageState> {
+class LoginForm extends Component<ILoginFormProps, ILoginFormState> {
     static propTypes: any;
 
-    constructor(props: ILoginPageProps) {
+    constructor(props: ILoginFormProps) {
         super(props);
 
         this.state = {

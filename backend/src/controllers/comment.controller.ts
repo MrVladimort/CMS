@@ -17,8 +17,8 @@ export async function getAllComments(req: Request, res: Response, next: NextFunc
 
 export async function getAllCommentsByPostId(req: Request, res: Response, next: NextFunction) {
     const postId = req.params.id;
-    const event = await PostModel.findOne({postId});
-    const comments = await CommentModel.findAllByPost(event.id);
+    const post = await PostModel.findOne({postId});
+    const comments = await CommentModel.findAllByPost(post.id);
     res.json({comments, success: true, status: 200});
 }
 

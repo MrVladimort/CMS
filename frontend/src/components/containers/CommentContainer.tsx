@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import {Comment, Icon, Segment} from "semantic-ui-react";
 import moment from "moment";
 import {Link} from "react-router-dom";
+import {CommentDTO, UserDTO} from "../../types";
 
 interface ICommentProps {
-    comment: any,
-    user: any,
+    comment: CommentDTO,
+    user: UserDTO,
 }
 
 class CommentContainer extends Component<ICommentProps> {
@@ -21,20 +22,20 @@ class CommentContainer extends Component<ICommentProps> {
                 <Comment>
                     <Comment.Avatar src='https://react.semantic-ui.com/images/avatar/small/christian.jpg'/>
                     <Comment.Content>
-                        <Comment.Author as='a'>{`${user.name} ${user.surname}`}</Comment.Author>
+                        <Comment.Author as='a'>{`${commentUser.name} ${commentUser.surname}`}</Comment.Author>
                         <Comment.Metadata>
-                            <div>{post.name}</div>
-                            <div><Icon name='star'/>{grade} Faves</div>
+                            <div>{post.title}</div>
+                            <div><Icon name='star'/>{grade} Grade</div>
                             <div>{moment(createdAt).fromNow()}</div>
                         </Comment.Metadata>
                         <Comment.Text>{text}</Comment.Text>
 
-                        {(user.userType && (user.userId === commentUser.userId || user.userType === 2)) &&
+                        {(user && (user.userId === commentUser.userId || user.userType === 2)) &&
                         <Comment.Actions>
-                            <Link to={`/comment/edit?commentId=${comment.id}`}>
+                            <Link to={`/comment/edit?commentId=${comment.commentId}`}>
                                 Edit
                             </Link>
-                            <Link to={`/comment/delete?commentId=${comment.id}`}>
+                            <Link to={`/comment/delete?commentId=${comment.commentId}`}>
                                 Delete
                             </Link>
                         </Comment.Actions>}

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import DatePicker from "react-datepicker";
 import { Input, Form } from "semantic-ui-react";
 import moment from "moment";

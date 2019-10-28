@@ -18,9 +18,9 @@ export class Comment extends Typegoose {
     }
 
     @staticMethod
-    public static async findAllByPost(this: ModelType<Comment> & typeof Comment, event: string) {
+    public static async findAllByPost(this: ModelType<Comment> & typeof Comment, post: string) {
         return this.find({
-            Event: event,
+            Post: post,
         }).populate("User").populate("Post");
     }
 
@@ -33,7 +33,7 @@ export class Comment extends Typegoose {
 
     @prop({unique: true}) public commentId: number;
     @prop({required: true, ref: User}) public User: Ref<User>;
-    @prop({required: true, ref: Post}) public Event: Ref<Post>;
+    @prop({required: true, ref: Post}) public Post: Ref<Post>;
     @prop({required: true}) public text: string;
     @prop({required: true}) public grade: number;
 }
