@@ -31,6 +31,8 @@ export interface PostDTO extends AuditingDTO {
     title: string;
     User: UserDTO;
     views: number;
+    createAt: Date;
+    updatedAt: Date;
 }
 
 export interface MessageDTO extends AuditingDTO {
