@@ -33,6 +33,31 @@ export interface PostDTO extends AuditingDTO {
     views: number;
 }
 
+export interface SteamUserDTO {
+    avatar: string;
+    profileUrl: string;
+    createDate: string;
+    nickname: string;
+    realName: string;
+    countryCode: string;
+    level: number;
+}
+
+export interface SteamFriendUserDTO {
+    nickname: string,
+    avatar: string;
+    url:string;
+}
+
+export interface SteamGameDTO {
+    name: string,
+    appID: string;
+    playTime:string;
+    playTime2:string;
+    logoURL:string;
+    iconURL:string;
+}
+
 export interface MessageDTO extends AuditingDTO {
 
 }

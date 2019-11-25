@@ -5,6 +5,7 @@ import commentRoute from "./comment.route";
 import homeRoute from "./home.route";
 import postRoute from "./post.route";
 import registerRoute from "./register.route";
+import steamRoute from "./steam.route";
 import userRoute from "./user.route";
 
 export default function(app: Application) {
@@ -14,4 +15,5 @@ export default function(app: Application) {
     app.use("/api/user", authMiddleware, userRoute);
     app.use("/api/comments", commentRoute);
     app.use("/api/posts", postRoute);
+    app.use("/api/steam", steamRoute);
 }
