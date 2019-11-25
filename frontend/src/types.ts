@@ -52,10 +52,10 @@ export interface SteamFriendUserDTO {
 export interface SteamGameDTO {
     name: string,
     appID: string;
-    playTime:string;
-    playTime2:string;
-    logoURL:string;
-    iconURL:string;
+    playTime: string;
+    playTime2: string;
+    logoURL: string;
+    iconURL: string;
 }
 
 export interface MessageDTO extends AuditingDTO {

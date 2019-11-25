@@ -39,7 +39,7 @@ export const getFriends = async (userId: string) => {
     const friends = await steam.getUserFriends(ID64);
     const convertedFriends = new Array();
 
-    await Promise.all(friends.slice(0, 10).map(async (friend: any) => {
+    await Promise.all(friends.slice(0, 48).map(async (friend: any) => {
         const user = await getAvatarAndURL(friend.steamID);
         convertedFriends.push(user);
     }));
@@ -56,3 +56,7 @@ export const getUserAvatar = async (userId: string, size: string) => {
 export const getUserFriends = (userId: string) => steam.getUserFriends(userId);
 
 export const getRecentlyPlayedGames = (userId: string) => steam.getUserRecentGames(userId);
+
+export const getUserStats = (userId: string, appId: number) => steam.getUserStats(userId, appId);
+
+export const getUserOwnedGames = (userId: string) => steam.getUserOwnedGames(userId);
