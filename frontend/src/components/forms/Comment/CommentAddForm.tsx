@@ -60,7 +60,6 @@ class CommitAddForm extends Component<ICommentAddFormProps, ICommentAddFormState
     });
 
     onDropdownChange = (e: React.SyntheticEvent<HTMLElement>, data: any) => {
-        console.log(data.name, data.value, this.state.formData.commentData);
         this.setState({
             formData: {
                 ...this.state.formData,

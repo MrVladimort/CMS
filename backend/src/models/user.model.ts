@@ -45,7 +45,11 @@ export class User {
         return this.findOne({email, verified});
     }
 
-    public static async findOneWithAccessToken(this: ReturnModelType<typeof User>, token: string, verified: boolean = true): Promise<User> {
+    public static async findOneByID(this: ReturnModelType<typeof User>, userId: number, verified: boolean = true) {
+        return this.findOne({userId, verified});
+    }
+
+    public static async findOneWithAccessToken(this: ReturnModelType<typeof User>, token: string, verified: boolean = true) {
         const email = verifyAccessToken(token);
         return this.findOneByEmail(email, verified);
     }

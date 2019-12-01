@@ -32,6 +32,7 @@ const App = ({location, dispatch, history}: any) => (
             <Route path="/register" exact component={RegisterPage}/>
             <Route path="/confirm-email" exact component={ConfirmEmailPage}/>
 
+            <Route path="/users" excat component={UserPage} />
             <Route path="/posts" exact component={PostPage}/>
             <Route path="/post/exact" exact component={PostExactPage}/>
             <Route path="/post/add" exact component={PostAddPage}/>
