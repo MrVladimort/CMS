@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {UserDTO} from "../../types";
-import {Container, Grid, Segment, Header} from "semantic-ui-react";
+import {Container, Grid, Segment, Header, Button} from "semantic-ui-react";
 
 interface IUserPageProps {
     user: UserDTO,

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Menu, Button} from 'semantic-ui-react';
+import {Menu, Button, Container} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
@@ -66,6 +66,12 @@ class Header extends Component<IHeaderProps, IHeaderState> {
                             <Button>
                                 {`Hello, ${user.name} ${user.surname}`}
                             </Button>
+                        </Menu.Item>
+                    </Link>
+
+                    <Link to='/steam'>
+                        <Menu.Item>
+                            <Button color={"olive"}>Connect steam</Button>
                         </Menu.Item>
                     </Link>
                     <Menu.Item>

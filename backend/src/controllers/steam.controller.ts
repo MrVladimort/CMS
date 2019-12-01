@@ -18,6 +18,10 @@ export async function getUserInfo(req: Request, res: Response, next: NextFunctio
     res.json({user: userData, userFriends: friends});
 }
 
+export async function authSeam(req: Request, res: Response, next: NextFunction) {
+    res.json("TEST");
+}
+
 export async function getLastPlayedGames(req: Request, res: Response, next: NextFunction) {
     let userId = req.params.id;
     userId = await getSteamID64(userId);
@@ -26,9 +30,12 @@ export async function getLastPlayedGames(req: Request, res: Response, next: Next
 }
 
 export async function getGameStats(req: Request, res: Response, next: NextFunction) {
-    let userId = req.params.id;
+    // stats works only for csgo
+    // request ?userId=maxvel_trade&gameId=730
+    // tslint:disable-next-line:prefer-const
+    let { userId, gameId } = req.query;
     userId = await getSteamID64(userId);
-    const gameStats = await getUserStats(userId, 730);
+    const gameStats = await getUserStats(userId, gameId);
     res.json(gameStats);
 }
 
