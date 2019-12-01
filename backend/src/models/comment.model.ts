@@ -1,5 +1,5 @@
-import {DocumentType, getModelForClass, modelOptions, plugin, prop, Ref} from "@typegoose/typegoose";
-import {ModelType} from "@typegoose/typegoose/lib/types";
+import {arrayProp, DocumentType, getModelForClass, modelOptions, plugin, prop, Ref, ReturnModelType} from "@typegoose/typegoose";
+import {CommentReply} from "./commentReply";
 import {AutoIncrement, AutoPopulate} from "./index";
 import {Post} from "./post.model";
 import {User} from "./user.model";
@@ -20,23 +20,23 @@ import {User} from "./user.model";
     },
 })
 export class Comment {
-    public static async findAll(this: ModelType<Comment> & typeof Comment) {
+    public static async findAll(this: ReturnModelType<typeof Comment>) {
         return this.find();
     }
 
-    public static async findOneByCommentId(this: ModelType<Comment> & typeof Comment, commentId: number) {
+    public static async findOneByCommentId(this: ReturnModelType<typeof Comment>, commentId: number) {
         return this.findOne({
             commentId,
         });
     }
 
-    public static async findAllByPost(this: ModelType<Comment> & typeof Comment, post: Post) {
+    public static async findAllByPost(this: ReturnModelType<typeof Comment>, post: Post) {
         return this.find({
             Post: post,
         });
     }
 
-    public static async findAllByUser(this: ModelType<Comment> & typeof Comment, user: User) {
+    public static async findAllByUser(this: ReturnModelType<typeof Comment>, user: User) {
         return this.find({
             User: user,
         });
@@ -46,7 +46,13 @@ export class Comment {
     @prop({autopopulate: true, required: true, ref: User}) public User: Ref<User>;
     @prop({autopopulate: true, required: true, ref: Post}) public Post: Ref<Post>;
     @prop({required: true}) public text: string;
-    @prop({required: true}) public grade: number;
+    @prop({required: true, min: 1, max: 5}) public grade: number;
+    @arrayProp({
+        ref: "CommentReply", // please know for "virtual populate" that "itemsRef" will **not** work here
+        foreignField: "Comment", // compare this value to the local document populate is called on
+        localField: "_id", // compare this to the foreign document's value defined in "foreignField"
+    })
+    public replies: Array<Ref<CommentReply>>;
 }
 
 export default getModelForClass(Comment);

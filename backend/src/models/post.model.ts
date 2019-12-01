@@ -1,5 +1,7 @@
-import {DocumentType, getModelForClass, modelOptions, plugin, prop, Ref} from "@typegoose/typegoose";
+import {arrayProp, DocumentType, getModelForClass, modelOptions, plugin, prop, Ref, ReturnModelType} from "@typegoose/typegoose";
+import {Comment} from "./comment.model";
 import {AutoIncrement, AutoPopulate} from "./index";
+import {Message} from "./message.model";
 import {User} from "./user.model";
 
 @plugin(AutoIncrement, {inc_field: "postId"})
@@ -19,12 +21,23 @@ import {User} from "./user.model";
     },
 })
 export class Post {
+
+    public static async findAll(this: ReturnModelType<typeof Post>) {
+        return this.find();
+    }
+
     @prop({unique: true}) public postId: number;
     @prop({required: true}) public text: string;
     @prop({}) public imageLink: string;
     @prop({required: true, unique: true}) public title: string;
     @prop({autopopulate: true, required: true, ref: User}) public User: Ref<User>;
     @prop({required: true, default: 0}) public views: number;
+    @arrayProp({
+        ref: Comment, // please know for "virtual populate" that "itemsRef" will **not** work here
+        foreignField: "Post", // compare this value to the local document populate is called on
+        localField: "_id", // compare this to the foreign document's value defined in "foreignField"
+    })
+    public comments: Array<Ref<Comment>>;
 }
 
 export default getModelForClass(Post);

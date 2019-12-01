@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Menu, Button} from 'semantic-ui-react';
+import {Menu, Button, Container} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
@@ -68,6 +68,12 @@ class Header extends Component<IHeaderProps, IHeaderState> {
                             </Button>
                         </Menu.Item>
                     </Link>
+
+                    <Link to='/steam'>
+                        <Menu.Item>
+                            <Button color={"olive"}>Connect steam</Button>
+                        </Menu.Item>
+                    </Link>
                     <Menu.Item>
                         <Button onClick={this.clickLogout} primary>Logout</Button>
                     </Menu.Item>
@@ -81,11 +87,10 @@ class Header extends Component<IHeaderProps, IHeaderState> {
             <div className='header'>
                 <Menu fluid compact size='massive' borderless fixed='top'>
                     <Menu.Item>
-                        <img src='https://donejs.com/static/img/react-logo.png'/>
+                        <img src='https://seeklogo.com/images/F/Felix-logo-4555675C70-seeklogo.com.png'/>
                     </Menu.Item>
 
                     <Menu.Item><Link to={'/'}>Home</Link></Menu.Item>
-                    <Menu.Item><Link to={'/my-page'}>My page</Link></Menu.Item>
                     <Menu.Item><Link to={'/posts'}>Posts</Link></Menu.Item>
 
                     <Menu.Menu position='right'>

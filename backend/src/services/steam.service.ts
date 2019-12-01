@@ -19,7 +19,7 @@ export const getConvertedUserData = async (userId: string) => {
         createDate: createDate.getFullYear(),
         nickname: userData.nickname,
         realName: userData.realName,
-        countryCode: userData.countryCode,
+        countryCode: userData.countryCode.toLowerCase(),
         level: steamLevel,
     };
 };

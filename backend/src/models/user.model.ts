@@ -1,8 +1,8 @@
-import {DocumentType, getModelForClass, modelOptions, plugin, prop} from "@typegoose/typegoose";
-import {ModelType} from "@typegoose/typegoose/lib/types";
+import {arrayProp, DocumentType, getModelForClass, modelOptions, plugin, prop, Ref, ReturnModelType} from "@typegoose/typegoose";
 import crypto from "crypto";
 import {createAccessToken, createRefreshToken, verifyAccessToken, verifyRefreshToken} from "../services/jwt.service";
 import {AutoIncrement} from "./index";
+import {Post} from "./post.model";
 
 const hashPassWithSalt = (pass: string, salt: string): string => crypto.pbkdf2Sync(pass, salt, 64, 128, "sha512").toString("base64");
 const generateSalt = (): string => crypto.randomBytes(8).toString("hex");
@@ -36,11 +36,11 @@ export class User {
         user.hashAndSetPass(pass);
     }
 
-    public static async findOneByEmail(this: ModelType<User> & typeof User, email: string, verified: boolean = true) {
+    public static async findOneByEmail(this: ReturnModelType<typeof User>, email: string, verified: boolean = true) {
         return this.findOne({email, verified});
     }
 
-    public static async findOneWithAccessToken(this: ModelType<User> & typeof User, token: string, verified: boolean = true) {
+    public static async findOneWithAccessToken(this: ReturnModelType<typeof User>, token: string, verified: boolean = true) {
         const email = verifyAccessToken(token);
         return this.findOneByEmail(email, verified);
     }
@@ -53,6 +53,12 @@ export class User {
     @prop() public passSalt: string;
     @prop({default: 1}) public userType: number;
     @prop({default: false}) public verified: boolean;
+    @arrayProp({
+        ref: "Post", // please know for "virtual populate" that "itemsRef" will **not** work here
+        foreignField: "User", // compare this value to the local document populate is called on
+        localField: "_id", // compare this to the foreign document's value defined in "foreignField"
+    })
+    public posts: Array<Ref<Post>>;
 
     public hashAndSetPass(this: DocumentType<User>, pass: string): void {
         const passSalt = generateSalt();

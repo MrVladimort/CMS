@@ -5,12 +5,15 @@ import _ from 'lodash';
 import ErrorMessage from "../../base/ErrorMessage";
 
 export interface ICommentAddFormData {
-    text: string;
-    grade: number;
+    commentData: {
+        text: string,
+        grade: number,
+    },
+    postId: number,
 }
 
 interface ICommentAddFormState {
-    formData: ICommentAddFormData,
+    formData: ICommentAddFormData
     errors: any,
     loading: boolean
 }
@@ -35,8 +38,11 @@ class CommitAddForm extends Component<ICommentAddFormProps, ICommentAddFormState
 
         this.state = {
             formData: {
-                text: "",
-                grade: 0
+                commentData: {
+                    text: "",
+                    grade: 0,
+                },
+                postId: 0,
             },
             loading: false,
             errors: {}
@@ -46,16 +52,25 @@ class CommitAddForm extends Component<ICommentAddFormProps, ICommentAddFormState
     onChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({
         formData: {
             ...this.state.formData,
-            [e.target.name]: e.target.value
+            commentData: {
+                ...this.state.formData.commentData,
+                [e.target.name]: e.target.value
+            },
         }
     });
 
-    onDropdownChange = (e: React.SyntheticEvent<HTMLElement>, data: any) => this.setState ( {
-        formData: {
-            ...this.state.formData,
-            [data.name]: data.value
-        }
-    });
+    onDropdownChange = (e: React.SyntheticEvent<HTMLElement>, data: any) => {
+        console.log(data.name, data.value, this.state.formData.commentData);
+        this.setState({
+            formData: {
+                ...this.state.formData,
+                commentData: {
+                    ...this.state.formData.commentData,
+                    [data.name]: data.value
+                },
+            }
+        });
+    };
 
     onSubmit = () => {
         const {formData} = this.state;
@@ -81,10 +96,10 @@ class CommitAddForm extends Component<ICommentAddFormProps, ICommentAddFormState
                 <Form onSubmit={this.onSubmit} loading={loading}>
                     <Header as='h5' content='Grade *'/>
                     <Form.Select required error={!!errors.grade} id='grade' name='grade' options={options}
-                                 placeholder='Grade' value={formData.grade} onChange={this.onDropdownChange}/>
+                                 placeholder='Grade' value={formData.commentData.grade} onChange={this.onDropdownChange}/>
                     <Header as='h5' content='Text *'/>
                     <Form.Field required error={!!errors.text} type='text' id='text' name='text'
-                                control={TextArea} value={formData.text} onChange={this.onChange}/>
+                                control={TextArea} value={formData.commentData.text} onChange={this.onChange}/>
                     <Form.Button fluid type='submit' primary content='Create new comment'/>
                 </Form>
             </Container>
