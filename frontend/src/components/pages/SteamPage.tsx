@@ -34,7 +34,7 @@ class SteamPage extends React.Component <IEventPageProps, ISteamPageState> {
     async componentDidMount(): Promise<void> {
         const {user, userFriends} = await steamApi.getUserData("maxvel_trade");
         const lastPlayedGames = await steamApi.getLastPlayedGames("maxvel_trade");
-        const ownedGames = await steamApi.getOwnedGames("cmdRua");
+        const ownedGames = await steamApi.getOwnedGames("maxvel_trade");
 
         this.setState({userData: user, friends: userFriends, lastPlayedGames: lastPlayedGames, ownedGames: ownedGames});
         console.log(this.state);
@@ -61,7 +61,7 @@ class SteamPage extends React.Component <IEventPageProps, ISteamPageState> {
                                             <span className='date'>Level {userData.level}</span>
                                         </Card.Meta>
                                         {/*<Card.Meta>*/}
-                                        {/*    <Flag name={Code.CountryCode}/>*/}
+                                        {/*    <Flag name={userData.countryCode}/>*/}
                                         {/*</Card.Meta>*/}
                                         <Card.Description>
 
