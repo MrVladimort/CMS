@@ -1,47 +1,15 @@
-import {InstanceType, ModelType, plugin, prop, Ref, staticMethod, Typegoose} from "typegoose";
-import {AutoIncrement} from "./index";
+import {DocumentType, getModelForClass, modelOptions, plugin, prop, Ref} from "@typegoose/typegoose";
+import {ModelType} from "@typegoose/typegoose/lib/types";
+import {AutoIncrement, AutoPopulate} from "./index";
 import {Post} from "./post.model";
 import {User} from "./user.model";
 
 @plugin(AutoIncrement, {inc_field: "commentId"})
-export class Comment extends Typegoose {
-    @staticMethod
-    public static async findAll(this: ModelType<Comment> & typeof Comment) {
-        return this.find().populate("User").populate("Post");
-    }
-
-    @staticMethod
-    public static async findOneByCommentId(this: ModelType<Comment> & typeof Comment, commentId: number) {
-        return this.findOne({
-            commentId,
-        }).populate("User").populate("Post");
-    }
-
-    @staticMethod
-    public static async findAllByPost(this: ModelType<Comment> & typeof Comment, post: string) {
-        return this.find({
-            Post: post,
-        }).populate("User").populate("Post");
-    }
-
-    @staticMethod
-    public static async findAllByUser(this: ModelType<Comment> & typeof Comment, user: string) {
-        return this.find({
-            User: user,
-        }).populate("User").populate("Post");
-    }
-
-    @prop({unique: true}) public commentId: number;
-    @prop({required: true, ref: User}) public User: Ref<User>;
-    @prop({required: true, ref: Post}) public Post: Ref<Post>;
-    @prop({required: true}) public text: string;
-    @prop({required: true}) public grade: number;
-}
-
-const Options = {
+@plugin(AutoPopulate)
+@modelOptions({
     schemaOptions: {
         toJSON: {
-            transform: (doc: InstanceType<Comment>, ret: InstanceType<Comment>, options: any) => {
+            transform: (doc: DocumentType<Comment>, ret: DocumentType<Comment>, options: any) => {
                 delete ret._id;
                 return ret;
             },
@@ -50,6 +18,35 @@ const Options = {
         },
         timestamps: true,
     },
-};
+})
+export class Comment {
+    public static async findAll(this: ModelType<Comment> & typeof Comment) {
+        return this.find().populate("User").populate("Post");
+    }
 
-export default new Comment().getModelForClass(Comment, Options);
+    public static async findOneByCommentId(this: ModelType<Comment> & typeof Comment, commentId: number) {
+        return this.findOne({
+            commentId,
+        }).populate("User").populate("Post");
+    }
+
+    public static async findAllByPost(this: ModelType<Comment> & typeof Comment, post: string) {
+        return this.find({
+            Post: post,
+        }).populate("User").populate("Post");
+    }
+
+    public static async findAllByUser(this: ModelType<Comment> & typeof Comment, user: string) {
+        return this.find({
+            User: user,
+        }).populate("User").populate("Post");
+    }
+
+    @prop({unique: true}) public commentId: number;
+    @prop({autopopulate: true, required: true, ref: User}) public User: Ref<User>;
+    @prop({autopopulate: true, required: true, ref: Post}) public Post: Ref<Post>;
+    @prop({required: true}) public text: string;
+    @prop({required: true}) public grade: number;
+}
+
+export default getModelForClass(Comment);

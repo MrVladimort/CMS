@@ -8,7 +8,7 @@ const router = Router();
 router.get("/post/:id", getAllCommentsByPostId);
 router.get("/:id", getComment);
 router.get("/", getAllComments);
-router.put("/:id", editComment);
+router.put("/:id", authMiddleware, editComment);
 router.post("/", authMiddleware, commentValidator, createComment);
 router.delete("/:id", authMiddleware, deleteComment);
 
