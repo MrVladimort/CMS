@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {UserDTO} from "../../types";
-import {Container, Grid, Segment, Header} from "semantic-ui-react";
+import {Container, Grid, Segment, Header, Menu, MenuItemProps} from "semantic-ui-react";
+import UserInfoContainer from "../containers/User/UserInfoContainer";
+import UserSteamContainer from "../containers/User/UserSteamContainer";
+import UserConversationContainer from "../containers/User/UserConversationsContainer";
 
 interface IUserPageProps {
     user: UserDTO,
@@ -12,25 +15,64 @@ interface IUserPageProps {
     },
 }
 
-class UserPage extends Component<IUserPageProps> {
+interface IUserPageState {
+    activeItem: string
+}
+
+class UserPage extends Component<IUserPageProps, IUserPageState> {
     static propTypes = {};
 
+    constructor(props: IUserPageProps) {
+        super(props);
+
+        this.state = {
+            activeItem: "info"
+        }
+    }
+
+    handleItemClick = (event: any, { name }: MenuItemProps) => this.setState({ activeItem: name });
+
+    getUserPageComponent = () => {
+        const { activeItem } = this.state;
+        const { user } = this.props;
+
+        switch (activeItem) {
+            case 'info':
+                return (<UserInfoContainer user={user}/>);
+            case 'steam':
+                return (<UserSteamContainer user={user}/>);
+            case 'conversation':
+                return (<UserConversationContainer user={user}/>);
+        }
+    };
+
     render() {
-        const {name, surname, email} = this.props.user;
+        const { activeItem } = this.state;
+
         return (
-            <Container text>
-                <Segment>
-                    <Grid celled='internally'>
-                        <Grid.Row>
-                            <Grid.Column>
-                                <Header content={`Surname: ${surname}`}/>
-                                <Header content={`Name: ${name}`}/>
-                                <Header content={`Email: ${email}`}/>
-                            </Grid.Column>
-                        </Grid.Row>
-                    </Grid>
+            <div>
+                <Menu pointing>
+                    <Menu.Item
+                        name='info'
+                        active={activeItem === 'info'}
+                        onClick={this.handleItemClick}
+                    />
+                    <Menu.Item
+                        name='steam'
+                        active={activeItem === 'steam'}
+                        onClick={this.handleItemClick}
+                    />
+                    <Menu.Item
+                        name='conversation'
+                        active={activeItem === 'conversation'}
+                        onClick={this.handleItemClick}
+                    />
+                </Menu>
+
+                <Segment attached='bottom'>
+                    {this.getUserPageComponent()}
                 </Segment>
-            </Container>
+            </div>
         );
     }
 }
