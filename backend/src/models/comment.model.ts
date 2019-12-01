@@ -21,25 +21,25 @@ import {User} from "./user.model";
 })
 export class Comment {
     public static async findAll(this: ModelType<Comment> & typeof Comment) {
-        return this.find().populate("User").populate("Post");
+        return this.find();
     }
 
     public static async findOneByCommentId(this: ModelType<Comment> & typeof Comment, commentId: number) {
         return this.findOne({
             commentId,
-        }).populate("User").populate("Post");
+        });
     }
 
-    public static async findAllByPost(this: ModelType<Comment> & typeof Comment, post: string) {
+    public static async findAllByPost(this: ModelType<Comment> & typeof Comment, post: Post) {
         return this.find({
             Post: post,
-        }).populate("User").populate("Post");
+        });
     }
 
-    public static async findAllByUser(this: ModelType<Comment> & typeof Comment, user: string) {
+    public static async findAllByUser(this: ModelType<Comment> & typeof Comment, user: User) {
         return this.find({
             User: user,
-        }).populate("User").populate("Post");
+        });
     }
 
     @prop({unique: true}) public commentId: number;

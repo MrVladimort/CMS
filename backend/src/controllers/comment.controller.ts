@@ -31,7 +31,7 @@ export async function createComment(req: Request, res: Response, next: NextFunct
     const {commentData, postId} = req.body;
 
     const post = await PostModel.findOne({postId});
-    const comment = new CommentModel({Post: post.id, User: req.user.userId, ...commentData});
+    const comment = new CommentModel({Post: post, User: req.user, ...commentData});
     await comment.save();
     res.json({comment, success: true, status: 200});
 }
