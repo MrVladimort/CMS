@@ -13,6 +13,7 @@ interface IUserConversationContainerProps {
 
 interface IUserConversationContainerState {
     conversations: Array<ConversationDTO>,
+    currentConversation: ConversationDTO,
     messages: Array<MessageDTO>,
 }
 
@@ -24,7 +25,18 @@ interface ISocketData {
 class UserConversationContainer extends Component<IUserConversationContainerProps, IUserConversationContainerState> {
     static propTypes = {};
 
+    constructor(props: IUserConversationContainerProps) {
+        super(props);
+
+        this.state = {
+            conversations: [],
+            currentConversation: null,
+            messages: []
+        }
+    }
+
     componentDidMount() {
+
         //Very simply connect to the socket
         //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
         socket.on("conversation.message", (data: ISocketData) => {
