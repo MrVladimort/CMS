@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Form, Container, Header, TextArea} from 'semantic-ui-react';
-import PropTypes from 'prop-types';
+import PropTypes, {func} from 'prop-types';
 import _ from 'lodash';
 import ErrorMessage from "../../base/ErrorMessage";
 
@@ -50,12 +50,19 @@ class CommitAddForm extends Component<ICommentAddFormProps, ICommentAddFormState
         }
     });
 
+    onDropdownChange = (e: React.SyntheticEvent<HTMLElement>, data: any) => this.setState ( {
+        formData: {
+            ...this.state.formData,
+            [data.name]: data.value
+        }
+    });
+
     onSubmit = () => {
         const {formData} = this.state;
         const errors = this.validate(formData);
         this.setState({errors});
         if (_.isEmpty(errors)) {
-            this.setState({loading: true});
+            console.log(formData);
             this.props.submit(formData)
                 .catch((err: any) => this.setState({errors: {global: err.response.data.error}, loading: false}));
         }
@@ -74,7 +81,7 @@ class CommitAddForm extends Component<ICommentAddFormProps, ICommentAddFormState
                 <Form onSubmit={this.onSubmit} loading={loading}>
                     <Header as='h5' content='Grade *'/>
                     <Form.Select required error={!!errors.grade} id='grade' name='grade' options={options}
-                                 placeholder='Grade' value={formData.grade} on={this.onChange}/>
+                                 placeholder='Grade' value={formData.grade} onChange={this.onDropdownChange}/>
                     <Header as='h5' content='Text *'/>
                     <Form.Field required error={!!errors.text} type='text' id='text' name='text'
                                 control={TextArea} value={formData.text} onChange={this.onChange}/>
