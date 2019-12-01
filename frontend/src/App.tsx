@@ -17,7 +17,6 @@ import LoginPage from "./components/pages/LoginPage";
 import RegisterPage from "./components/pages/RegisterPage";
 import UserPage from "./components/pages/UserPage";
 import ConfirmEmailPage from "./components/pages/ConfirmEmailPage";
-import SteamPage from "./components/pages/SteamPage";
 
 import PostPage from "./components/pages/Post/PostPage";
 import PostExactPage from "./components/pages/Post/PostExactPage";
@@ -37,8 +36,6 @@ const App = ({location, dispatch, history}: any) => (
             <Route path="/post/exact" exact component={PostExactPage}/>
             <Route path="/post/add" exact component={PostAddPage}/>
             <Route path="/post/edit" exact component={PostEditPage}/>
-
-            <Route path="/steam" exact component={SteamPage}/>
 
             <PrivateRoute path="/user" exact component={UserPage}/>
         </div>

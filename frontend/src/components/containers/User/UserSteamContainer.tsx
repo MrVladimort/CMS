@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {SteamFriendUserDTO, SteamGameDTO, SteamUserDTO, UserDTO} from "../../../types"
 import {Grid, Segment, Header, Card, Image, Flag, FlagNameValues, Icon, Feed, Loader, Dimmer} from "semantic-ui-react";
 import steamApi from "../../../api/steam";
+import SegmentLoader from "../../base/SegmentLoader";
 
 interface IUserSteamContainerProps {
     user: UserDTO
@@ -50,14 +51,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
         console.log(lastPlayedGames);
         return (
             loading ?
-                <Segment>
-                    <Dimmer active>
-                        <Loader size='massive'>Loading</Loader>
-                    </Dimmer>
-                    <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-                    <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-                    <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-                </Segment> :
+                <SegmentLoader/> :
                 <Grid celled='internally'>
                     <Grid.Row>
                         <Grid.Column width={3}>
