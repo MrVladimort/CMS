@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import postApi from "../../api/post";
 import commentApi from "../..//api/comment";
-import {Grid, Comment} from "semantic-ui-react";
+import {Grid, Comment, Segment} from "semantic-ui-react";
 import CommentContainer from "../containers/CommentContainer";
 import PostContainer from "../containers/PostContainer";
 import {PostDTO, CommentDTO, UserDTO} from "../../types";
@@ -41,7 +41,10 @@ class HomePage extends Component<IHomePageProps, IHomePageState> {
         return (
             <Grid columns={2} celled="internally">
                 <Grid.Column width={12}>
-                    {posts && posts.map(post => <PostContainer post={post} key={`post: ${post.postId}`}/>)}
+                    {posts && posts.map(post =>
+                        <Segment raised>
+                            <PostContainer post={post} key={`post: ${post.postId}`}/>
+                        </Segment>)}
                 </Grid.Column>
 
                 <Grid.Column width={4}>

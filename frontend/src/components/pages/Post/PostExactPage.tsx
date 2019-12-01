@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Container, Segment} from "semantic-ui-react";
+import {Comment, Container, Header, Segment} from "semantic-ui-react";
 import postApi from "../../../api/post";
 import commentApi from "../../../api/comment";
 import CommentContainer from "../../containers/CommentContainer";
@@ -45,7 +45,10 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
 
     submitCreateComment = async (formData: ICommentAddFormData): Promise<void> => {
         const {post, comments} = this.state;
+        formData.postId = post.postId;
+        console.log(formData);
         const commentResponse = await commentApi.createComment(formData, post.postId);
+        console.log(comments);
         comments.unshift(commentResponse.comment);
         this.setState({comments});
     };
@@ -63,14 +66,22 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
         return (
             <Container>
                 <Segment raised>
-                    {post && <Segment>
-                        <PostActionContainer delete={this.onDeleteClick} post={post} user={user}/>
-                    </Segment>}
+                    {post &&
+                    <PostActionContainer delete={this.onDeleteClick} post={post} user={user}/>
+                    }
                     <Segment>
                         <CommentAddForm submit={this.submitCreateComment}/>
-                        {comments && comments.map(comment => <CommentContainer key={`comment: ${comment.commentId}`}
-                                                                               user={user} comment={comment}/>)}
                     </Segment>
+                    <Container>
+                        <Header as='h3' dividing>
+                            Comments
+                        </ Header>
+
+                        <Comment.Group>
+                            {comments && comments.map(comment => <CommentContainer key={`comment: ${comment.commentId}`}
+                                                                                   user={user} comment={comment}/>)}
+                        </Comment.Group>
+                    </Container>
                 </Segment>
             </Container>
         )
