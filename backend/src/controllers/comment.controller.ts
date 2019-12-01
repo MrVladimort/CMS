@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator/check";
 import HttpError from "../errors/http.error";
 import CommentModel, {Comment} from "../models/comment.model";
+import CommentReplyModel, {CommentReply} from "../models/commentReply.model";
 import PostModel from "../models/post.model";
 
 export async function getComment(req: Request, res: Response, next: NextFunction) {
@@ -54,4 +55,13 @@ export async function deleteComment(req: Request, res: Response, next: NextFunct
     const commentId = req.params.id;
     await CommentModel.deleteOne({commentId});
     res.json({success: true, status: 200});
+}
+
+export async function replyComment(req: Request, res: Response, next: NextFunction) {
+    const commentId = req.params.id;
+    const {replyData} =  req.body;
+    const comment = await CommentModel.findOne({commentId});
+    const commentReply = new CommentReplyModel({Comment: comment, User: req.user, ...replyData});
+    await commentReply.save();
+    res.json({commentReply, success: true, status: 200});
 }

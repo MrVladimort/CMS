@@ -20,17 +20,14 @@ import {User} from "./user.model";
 })
 export class Conversation {
 
-    public static async findOneByTwoUsers(this: ReturnModelType<typeof Conversation>, mainUser: User, secondUser: User) {
+    public static async findOneByConversationId(this: ReturnModelType<typeof Conversation>, conversationId: number) {
         return this.findOne({
-            MainUser: mainUser,
-            SecondUser: secondUser,
+            conversationId,
         });
     }
 
-    public static async findAllByMainUser(this: ReturnModelType<typeof Conversation>, user: User) {
-        return this.find({
-            MainUser: user,
-        });
+    public static async findAllByUser(this: ReturnModelType<typeof Conversation>, user: User) {
+        return this.find({user: {$elemMatch: user}});
     }
 
     @prop({unique: true}) public conversationId: number;

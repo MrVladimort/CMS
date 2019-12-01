@@ -1,5 +1,5 @@
 import {arrayProp, DocumentType, getModelForClass, modelOptions, plugin, prop, Ref, ReturnModelType} from "@typegoose/typegoose";
-import {CommentReply} from "./commentReply";
+import {CommentReply} from "./commentReply.model";
 import {AutoIncrement, AutoPopulate} from "./index";
 import {Post} from "./post.model";
 import {User} from "./user.model";

@@ -1,6 +1,7 @@
 import {arrayProp, DocumentType, getModelForClass, modelOptions, plugin, prop, Ref, ReturnModelType} from "@typegoose/typegoose";
 import crypto from "crypto";
 import {createAccessToken, createRefreshToken, verifyAccessToken, verifyRefreshToken} from "../services/jwt.service";
+import {Friend} from "./friend.model";
 import {AutoIncrement} from "./index";
 import {Post} from "./post.model";
 
@@ -36,11 +37,15 @@ export class User {
         user.hashAndSetPass(pass);
     }
 
-    public static async findOneByEmail(this: ReturnModelType<typeof User>, email: string, verified: boolean = true) {
+    public static async findAllByIdIn(this: ReturnModelType<typeof User>, ids: number[]): Promise<User[]> {
+        return this.find({userId: {$in: ids}});
+    }
+
+    public static async findOneByEmail(this: ReturnModelType<typeof User>, email: string, verified: boolean = true): Promise<User> {
         return this.findOne({email, verified});
     }
 
-    public static async findOneWithAccessToken(this: ReturnModelType<typeof User>, token: string, verified: boolean = true) {
+    public static async findOneWithAccessToken(this: ReturnModelType<typeof User>, token: string, verified: boolean = true): Promise<User> {
         const email = verifyAccessToken(token);
         return this.findOneByEmail(email, verified);
     }
@@ -59,6 +64,12 @@ export class User {
         localField: "_id", // compare this to the foreign document's value defined in "foreignField"
     })
     public posts: Array<Ref<Post>>;
+    @arrayProp({
+        ref: "Friend", // please know for "virtual populate" that "itemsRef" will **not** work here
+        foreignField: "User", // compare this value to the local document populate is called on
+        localField: "_id", // compare this to the foreign document's value defined in "foreignField"
+    })
+    public friends: Array<Ref<Friend>>;
 
     public hashAndSetPass(this: DocumentType<User>, pass: string): void {
         const passSalt = generateSalt();
