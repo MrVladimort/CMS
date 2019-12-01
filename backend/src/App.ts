@@ -1,10 +1,12 @@
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
+import {Server} from "http";
 
 import serverConfig from "./configs/server.config";
 import {errorHandler, notFound} from "./middlewares/basic.middleware";
 import {connectToDb} from "./models";
+import {initSocket} from "./services/socket.service";
 import {User} from "./models/user.model";
 import routes from "./routes";
 import {morganLogger, winstonLogger} from "./services/logger.service";
@@ -33,8 +35,10 @@ app.use(notFound);
 app.use(errorHandler);
 
 async function main() {
-    await app.listen(serverConfig.port);
+    const server = new Server(app);
+    await initSocket(server);
     await connectToDb();
+    await server.listen(serverConfig.port);
     winstonLogger.info(`Server ready and listening on port ${serverConfig.port}`);
 }
 

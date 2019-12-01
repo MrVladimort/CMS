@@ -63,3 +63,6 @@ export interface SteamGameDTO {
 export interface MessageDTO extends AuditingDTO {
 
 }
+
+export interface ConversationDTO {
+}
