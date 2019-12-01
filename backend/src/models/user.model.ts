@@ -1,5 +1,6 @@
+import {DocumentType, getModelForClass, modelOptions, plugin, prop} from "@typegoose/typegoose";
+import {ModelType} from "@typegoose/typegoose/lib/types";
 import crypto from "crypto";
-import {instanceMethod, InstanceType, ModelType, plugin, prop, staticMethod, Typegoose} from "typegoose";
 import {createAccessToken, createRefreshToken, verifyAccessToken, verifyRefreshToken} from "../services/jwt.service";
 import {AutoIncrement} from "./index";
 
@@ -12,20 +13,33 @@ export interface IAuthTokens {
 }
 
 @plugin(AutoIncrement, {inc_field: "userId"})
-export class User extends Typegoose {
+@modelOptions({schemaOptions: {
+        toJSON: {
+            transform: (doc: DocumentType<User>, ret: DocumentType<User>, options: any) => {
+                delete ret._id;
+                delete ret.id;
+                delete ret.passHash;
+                delete ret.passSalt;
+                delete ret.verified;
+                return ret;
+            },
+            versionKey: false,
+            virtuals: true,
+        },
+        timestamps: true,
+    },
+})
+export class User {
 
-    @prop()
-    set pass(this: InstanceType<User>, pass: string) {
+    set pass(this: DocumentType<User>, pass: string) {
         const user = this;
         user.hashAndSetPass(pass);
     }
 
-    @staticMethod
     public static async findOneByEmail(this: ModelType<User> & typeof User, email: string, verified: boolean = true) {
         return this.findOne({email, verified});
     }
 
-    @staticMethod
     public static async findOneWithAccessToken(this: ModelType<User> & typeof User, token: string, verified: boolean = true) {
         const email = verifyAccessToken(token);
         return this.findOneByEmail(email, verified);
@@ -40,8 +54,7 @@ export class User extends Typegoose {
     @prop({default: 1}) public userType: number;
     @prop({default: false}) public verified: boolean;
 
-    @instanceMethod
-    public hashAndSetPass(this: InstanceType<User>, pass: string): void {
+    public hashAndSetPass(this: DocumentType<User>, pass: string): void {
         const passSalt = generateSalt();
         const passHash = hashPassWithSalt(pass, passSalt);
 
@@ -49,20 +62,17 @@ export class User extends Typegoose {
         this.passHash = passHash;
     }
 
-    @instanceMethod
-    public verifyPassword(this: InstanceType<User>, passToCheck: string): boolean {
+    public verifyPassword(this: DocumentType<User>, passToCheck: string): boolean {
         const passHash = hashPassWithSalt(passToCheck, this.passSalt); // getting hashPass using pass and salt
         return this.passHash === passHash; // found user with same hash and returned it
     }
 
-    @instanceMethod
-    public verifyRefreshToken(this: InstanceType<User>, token: string): boolean {
+    public verifyRefreshToken(this: DocumentType<User>, token: string): boolean {
         const email = verifyRefreshToken(token);
         return this.email === email;
     }
 
-    @instanceMethod
-    public generateJWT(this: InstanceType<User>): IAuthTokens {
+    public generateJWT(this: DocumentType<User>): IAuthTokens {
         const accessToken = createAccessToken(this.email);
         const refreshToken = createRefreshToken(this.email);
 
@@ -73,22 +83,4 @@ export class User extends Typegoose {
     }
 }
 
-const Options = {
-    schemaOptions: {
-        toJSON: {
-            transform: (doc: InstanceType<User>, ret: InstanceType<User>, options: any) => {
-                delete ret._id;
-                delete ret.id;
-                delete ret.passHash;
-                delete ret.passSalt;
-                delete ret.verified;
-                return ret;
-            },
-            versionKey: false,
-            virtuals: true,
-        },
-        timestamps: true,
-    },
-};
-
-export default new User().getModelForClass(User, Options);
+export default getModelForClass(User);

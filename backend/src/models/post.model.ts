@@ -1,21 +1,13 @@
-import {instanceMethod, InstanceType, ModelType, plugin, prop, Ref, staticMethod, Typegoose} from "typegoose";
-import {AutoIncrement} from "./index";
+import {DocumentType, getModelForClass, modelOptions, plugin, prop, Ref} from "@typegoose/typegoose";
+import {AutoIncrement, AutoPopulate} from "./index";
 import {User} from "./user.model";
 
 @plugin(AutoIncrement, {inc_field: "postId"})
-export class Post extends Typegoose {
-    @prop({unique: true}) public postId: number;
-    @prop({required: true}) public text: string;
-    @prop({}) public imageLink: string;
-    @prop({required: true, unique: true}) public title: string;
-    @prop({required: true, ref: User}) public User: Ref<User>;
-    @prop({required: true, default: 0}) public views: number;
-}
-
-const Options = {
+@plugin(AutoPopulate)
+@modelOptions({
     schemaOptions: {
         toJSON: {
-            transform: (doc: InstanceType<Post>, ret: InstanceType<Post>, options: any) => {
+            transform: (doc: DocumentType<Post>, ret: DocumentType<Post>, options: any) => {
                 delete ret._id;
                 delete ret.id;
                 return ret;
@@ -25,6 +17,14 @@ const Options = {
         },
         timestamps: true,
     },
-};
+})
+export class Post {
+    @prop({unique: true}) public postId: number;
+    @prop({required: true}) public text: string;
+    @prop({}) public imageLink: string;
+    @prop({required: true, unique: true}) public title: string;
+    @prop({autopopulate: true, required: true, ref: User}) public User: Ref<User>;
+    @prop({required: true, default: 0}) public views: number;
+}
 
-export default new Post().getModelForClass(Post, Options);
+export default getModelForClass(Post);

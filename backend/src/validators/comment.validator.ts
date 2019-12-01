@@ -1,7 +1,7 @@
 import {body} from "express-validator/check";
 
 export const commentValidator = [
-    body("eventId")
+    body("postId")
         .exists()
         .isNumeric(),
     body("commentData")

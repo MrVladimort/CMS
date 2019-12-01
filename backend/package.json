@@ -25,11 +25,12 @@
     "moment": "^2.24.0",
     "mongoose": "^5.7.7",
     "mongoose-sequence": "^5.2.2",
+    "mongoose-autopopulate": "^0.9.1",
     "morgan": "^1.9.1",
     "nodemailer": "^6.3.1",
     "pug": "^2.0.4",
     "steamapi": "git+https://git@github.com/xDimGG/node-steamapi.git",
-    "typegoose": "^5.9.1",
+    "@typegoose/typegoose": "^6.1.6",
     "winston": "^3.2.1",
     "xregexp": "^4.2.4"
   },
