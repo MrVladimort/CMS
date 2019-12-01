@@ -21,7 +21,9 @@ class CommentContainer extends Component<ICommentProps> {
             <Comment>
                 <Comment.Avatar src='https://react.semantic-ui.com/images/avatar/small/christian.jpg'/>
                 <Comment.Content>
-                    <Comment.Author as='a'>{`${commentUser.name} ${commentUser.surname}`}</Comment.Author>
+                    <Link to={`/users?userId=${commentUser.userId}`}>
+                        <Comment.Author as='a'>{`${commentUser.name} ${commentUser.surname}`}</Comment.Author>
+                    </Link>
                     <Comment.Metadata>
                         <div>{moment(createdAt).fromNow()}</div>
                         <div>
@@ -29,16 +31,16 @@ class CommentContainer extends Component<ICommentProps> {
                         </div>
                     </Comment.Metadata>
                     <Comment.Text>{text}</Comment.Text>
-                {(user && (user.userId === commentUser.userId || user.userType === 2)) &&
-                <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                    <Link to={`/comment/edit?commentId=${comment.commentId}`}>
-                        <Comment.Action>Edit</Comment.Action>
-                    </Link>
-                    <Link to={`/comment/delete?commentId=${comment.commentId}`}>
-                        <Comment.Action>Delete</Comment.Action>
-                    </Link>
-                </Comment.Actions>}
+                    {(user && (user.userId === commentUser.userId || user.userType === 2)) &&
+                    <Comment.Actions>
+                        <Comment.Action>Reply</Comment.Action>
+                        <Link to={`/comment/edit?commentId=${comment.commentId}`}>
+                            <Comment.Action>Edit</Comment.Action>
+                        </Link>
+                        <Link to={`/comment/delete?commentId=${comment.commentId}`}>
+                            <Comment.Action>Delete</Comment.Action>
+                        </Link>
+                    </Comment.Actions>}
                 </Comment.Content>
             </Comment>
         )

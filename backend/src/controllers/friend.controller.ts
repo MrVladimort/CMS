@@ -4,13 +4,13 @@ import FriendModel, {Friend} from "../models/friend.model";
 import UserModel, {User} from "../models/user.model";
 
 export async function getFriends(req: Request, res: Response, next: NextFunction) {
-    const friendRequests = await FriendModel.findAllByUser(req.user);
-    res.json({friendRequests, success: true, status: 200});
+    const friends = await FriendModel.findAllByUser(req.user);
+    res.json({friends, success: true, status: 200});
 }
 
 export async function getFriendRequests(req: Request, res: Response, next: NextFunction) {
-    const friendRequests = await FriendModel.findAllByFriend(req.user);
-    res.json({friendRequests, success: true, status: 200});
+    const friends = await FriendModel.findAllByFriend(req.user);
+    res.json({friends, success: true, status: 200});
 }
 
 export async function addFriend(req: Request, res: Response, next: NextFunction) {

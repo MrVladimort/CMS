@@ -2,10 +2,13 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
 import {UserDTO} from "../../types";
-import {Container, Grid, Segment, Header, Menu, MenuItemProps} from "semantic-ui-react";
+import {Container, Grid, Segment, Header, Menu, MenuItemProps, Button} from "semantic-ui-react";
 import UserInfoContainer from "../containers/User/UserInfoContainer";
 import UserSteamContainer from "../containers/User/UserSteamContainer";
 import UserConversationContainer from "../containers/User/UserConversationsContainer";
+import postApi from "../../api/post";
+import userApi from "../../api/user";
+import SegmentLoader from "../base/SegmentLoader";
 
 interface IUserPageProps {
     user: UserDTO,
@@ -16,7 +19,10 @@ interface IUserPageProps {
 }
 
 interface IUserPageState {
-    activeItem: string
+    user: UserDTO,
+    isAnotherUser: boolean,
+    activeItem: string,
+    loading: boolean,
 }
 
 class UserPage extends Component<IUserPageProps, IUserPageState> {
@@ -26,15 +32,31 @@ class UserPage extends Component<IUserPageProps, IUserPageState> {
         super(props);
 
         this.state = {
-            activeItem: "info"
+            user: null,
+            isAnotherUser: false,
+            activeItem: "info",
+            loading: true,
         }
     }
 
-    handleItemClick = (event: any, { name }: MenuItemProps) => this.setState({ activeItem: name });
+    async componentDidMount(): Promise<void> {
+        const query = new URLSearchParams(this.props.location.search);
+        const userId = parseInt(String(query.get('userId')));
+
+        if (userId) {
+            const anotherUserResponse = await userApi.getAnotherUser(userId);
+            this.setState({user: anotherUserResponse.user, isAnotherUser: true});
+        } else {
+            this.setState({user: this.props.user});
+        }
+
+        this.setState({loading: false});
+    }
+
+    handleItemClick = (event: any, {name}: MenuItemProps) => this.setState({activeItem: name});
 
     getUserPageComponent = () => {
-        const { activeItem } = this.state;
-        const { user } = this.props;
+        const {activeItem, user} = this.state;
 
         switch (activeItem) {
             case 'info':
@@ -46,33 +68,45 @@ class UserPage extends Component<IUserPageProps, IUserPageState> {
         }
     };
 
+    friendsButtonClick = async () => {
+        const anotherUserResponse = await userApi.addToFriends(this.state.user.userId);
+        console.log(anotherUserResponse);
+    };
+
     render() {
-        const { activeItem } = this.state;
+        const {activeItem, isAnotherUser, loading} = this.state;
 
         return (
-            <div>
-                <Menu pointing>
-                    <Menu.Item
-                        name='info'
-                        active={activeItem === 'info'}
-                        onClick={this.handleItemClick}
-                    />
-                    <Menu.Item
-                        name='steam'
-                        active={activeItem === 'steam'}
-                        onClick={this.handleItemClick}
-                    />
-                    <Menu.Item
-                        name='conversation'
-                        active={activeItem === 'conversation'}
-                        onClick={this.handleItemClick}
-                    />
-                </Menu>
+            loading ?
+                <SegmentLoader/> :
+                <div>
+                    {isAnotherUser &&
+                        <Button color={"pink"} onClick={this.friendsButtonClick}> Add to friends</Button>
+                    }
+                    <Menu pointing>
+                        <Menu.Item
+                            name='info'
+                            active={activeItem === 'info'}
+                            onClick={this.handleItemClick}
+                        />
+                        <Menu.Item
+                            name='steam'
+                            active={activeItem === 'steam'}
+                            onClick={this.handleItemClick}
+                        />
+                        {!isAnotherUser &&
+                        <Menu.Item
+                            name='conversation'
+                            active={activeItem === 'conversation'}
+                            onClick={this.handleItemClick}
+                        />
+                        }
+                    </Menu>
 
-                <Segment attached='bottom'>
-                    {this.getUserPageComponent()}
-                </Segment>
-            </div>
+                    <Segment attached='bottom'>
+                        {this.getUserPageComponent()}
+                    </Segment>
+                </div>
         );
     }
 }

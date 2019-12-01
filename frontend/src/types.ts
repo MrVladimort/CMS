@@ -16,6 +16,13 @@ export interface UserDTO extends AuditingDTO {
     userType: number;
 }
 
+export interface FriendDTO extends AuditingDTO {
+    User: UserDTO;
+    Friend: UserDTO;
+    friendId: number;
+    accepted: boolean;
+}
+
 export interface CommentDTO extends AuditingDTO {
     commentId: number;
     User: UserDTO;
