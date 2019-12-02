@@ -1,44 +1,34 @@
 import React, {Component} from 'react';
-import {Form, Container, Header, TextArea} from 'semantic-ui-react';
+import {Form, Container, Header, TextArea, Rating} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import ErrorMessage from "../../base/ErrorMessage";
-import {CommentDTO} from "../../../types";
+import ErrorMessage from "../base/ErrorMessage";
 
-export interface ICommentEditFormData {
-    text: string;
-    grade: number;
+export interface ICommentFormData {
+    text: string,
+    grade: number,
 }
 
-interface ICommentEditFormState {
-    formData: ICommentEditFormData,
+interface ICommentFormState {
+    formData: ICommentFormData
     errors: any,
     loading: boolean
 }
 
-interface ICommentEditFormProps {
-    comment: CommentDTO,
-    submit: Function
+interface ICommentFormProps {
+    submit: (formData: ICommentFormData) => Promise<void>
 }
 
-const options = [
-    { key: 1, text: '1', value: 1},
-    { key: 2, text: '2', value: 2},
-    { key: 3, text: '3', value: 3},
-    { key: 4, text: '4', value: 4},
-    { key: 5, text: '5', value: 5},
-];
-
-class CommitEditForm extends Component<ICommentEditFormProps, ICommentEditFormState> {
+class CommitAddForm extends Component<ICommentFormProps, ICommentFormState> {
     static propTypes: any;
 
-    constructor(props: ICommentEditFormProps) {
+    constructor(props: ICommentFormProps) {
         super(props);
 
         this.state = {
             formData: {
-                text: props.comment.text,
-                grade: props.comment.grade
+                text: "",
+                grade: 0,
             },
             loading: false,
             errors: {}
@@ -52,19 +42,31 @@ class CommitEditForm extends Component<ICommentEditFormProps, ICommentEditFormSt
         }
     });
 
+    handleRate = (e: any, {rating, maxRating}: any) => {
+        console.log(rating, maxRating);
+        this.setState({
+            formData: {
+                ...this.state.formData,
+                grade: rating
+            }
+        });
+    };
+
     onSubmit = () => {
         const {formData} = this.state;
         const errors = this.validate(formData);
         this.setState({errors});
         if (_.isEmpty(errors)) {
-            this.setState({loading: true});
             this.props.submit(formData)
                 .catch((err: any) => this.setState({errors: {global: err.response.data.error}, loading: false}));
         }
     };
 
-    validate = (formData: ICommentEditFormData) => {
-        const errors = {};
+    validate = (formData: ICommentFormData) => {
+        const errors: any = {};
+        if (formData.grade === 0) {
+            errors.grade = "Grade must be greater then 0"
+        }
         return _.filter(errors, error => error);
     };
 
@@ -75,20 +77,23 @@ class CommitEditForm extends Component<ICommentEditFormProps, ICommentEditFormSt
                 {!_.isEmpty(errors) && <ErrorMessage header='Something went wrong' errors={errors}/>}
                 <Form onSubmit={this.onSubmit} loading={loading}>
                     <Header as='h5' content='Grade *'/>
-                    <Form.Select required error={!!errors.grade} id='grade' name='grade' options={options}
-                                 placeholder='Grade' value={formData.grade} on={this.onChange}/>
+
+                    <Form.Field error={!!errors.grade}>
+                        <Rating id='grade' name='grade' rating={formData.grade} clearable
+                                maxRating={5} onRate={this.handleRate}/>
+                    </Form.Field>
                     <Header as='h5' content='Text *'/>
                     <Form.Field required error={!!errors.text} type='text' id='text' name='text'
                                 control={TextArea} value={formData.text} onChange={this.onChange}/>
-                    <Form.Button fluid type='submit' primary content='Edit comment'/>
+                    <Form.Button fluid type='submit' primary content='Create new comment'/>
                 </Form>
             </Container>
         );
     }
 }
 
-CommitEditForm.propTypes = {
+CommitAddForm.propTypes = {
     submit: PropTypes.func.isRequired
 };
 
-export default CommitEditForm;
+export default CommitAddForm;

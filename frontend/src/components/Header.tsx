@@ -69,11 +69,6 @@ class Header extends Component<IHeaderProps, IHeaderState> {
                         </Menu.Item>
                     </Link>
 
-                    <Link to='/steam'>
-                        <Menu.Item>
-                            <Button color={"olive"}>Connect steam</Button>
-                        </Menu.Item>
-                    </Link>
                     <Menu.Item>
                         <Button onClick={this.clickLogout} primary>Logout</Button>
                     </Menu.Item>

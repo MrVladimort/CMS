@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import moment from "moment";
 import {UserDTO, FriendDTO, PostDTO} from "../../../types"
-import {Container, Grid, Segment, Header, Card, Button, Image, SemanticSIZES} from "semantic-ui-react";
+import {Grid, Segment, Header, Card, Button, Image} from "semantic-ui-react";
 import userApi from "../../../api/user";
 import postApi from "../../../api/post";
 import SegmentLoader from "../../base/SegmentLoader";
+import PostContainer from "../PostContainer";
 
 interface IUserInfoContainerProps {
     user: UserDTO,
@@ -74,97 +76,127 @@ class UserInfoContainer extends Component<IUserInfoContainerProps, IUserInfoCont
         this.setState({friendsRequest})
     };
 
-    render() {
+    getFriends = () => {
         const {user, isAnotherUser} = this.props;
-        const {name, surname, email} = user;
-        const {loading, friends, friendsRequest} = this.state;
+        const {friends, friendsRequest} = this.state;
+
+        return (
+            <div>
+                {isAnotherUser
+                && !friendsRequest.find(friendRequest => friendRequest.User.userId === user.userId || friendRequest.Friend.userId === user.userId)
+                && !friends.find(friend => friend.User.userId === user.userId || friend.Friend.userId === user.userId)
+                && <Button fluid color={"pink"} onClick={this.addToFriends}> Add to friends</Button>}
+                {!isAnotherUser && friendsRequest.length > 0 &&
+                <div>
+                    <Header size={"huge"}> New friend requests </Header>
+                    <Card.Group centered>
+                        {friendsRequest.map((friendRequest) =>
+                            <Card key={`friends ${friendRequest.friendId}`} fluid raised>
+                                <Card.Content>
+                                    <Header as='h2'>
+                                        <Image circular
+                                               src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'/>
+                                        {friendRequest.User.name} {friendRequest.User.surname}
+                                    </Header>
+                                    <Card.Meta>New Friend</Card.Meta>
+                                    <Card.Description>
+                                        Steve wants to add you to the group <strong>best friends</strong>
+                                    </Card.Description>
+                                </Card.Content>
+                                <Card.Content extra>
+                                    <div className='ui two buttons'>
+                                        <Button basic content="Approve" color='green'
+                                                onClick={() => this.approveFriendRequest(friendRequest.friendId)}/>
+                                        <Button basic content="Decline" color='red'
+                                                onClick={() => this.declineFriendRequest(friendRequest.friendId)}/>
+                                    </div>
+                                </Card.Content>
+                            </Card>
+                        )}
+                    </Card.Group>
+                </div>}
+
+                {!isAnotherUser && friends.length > 0 && friends.find(friend => !friend.accepted && friend.User.userId === user.userId) &&
+                <div>
+                    <Header size={"huge"}> Pending friend requests </Header>
+                    <Card.Group centered>
+                        {friends.filter(friend => !friend.accepted && friend.User.userId === user.userId).map(friend =>
+                            <Card key={`friends ${friend.friendId}`} fluid raised>
+                                <Card.Content>
+                                    <Header as='h2'>
+                                        <Image circular
+                                               src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'/>
+                                        {friend.Friend.name} {friend.Friend.surname}
+                                    </Header>
+                                    <Card.Meta>Pending friend requests</Card.Meta>
+                                </Card.Content>
+                                <Card.Content extra>
+                                    <Button fluid basic content="Delete" color='red'
+                                            onClick={() => this.deleteFriendRequest(friend.friendId)}/>
+                                </Card.Content>
+                            </Card>
+                        )}
+                    </Card.Group>
+                </div>}
+
+                {friends.length > 0 && friends.find(friend => friend.accepted && friend.Friend.userId === user.userId) &&
+                <div>
+                    <Card.Group centered>
+                        <Header size="huge"> Friends </Header>
+                        {friends.filter(friend => friend.accepted && friend.Friend.userId === user.userId).map(friend =>
+                            <Card key={`friends ${friend.friendId}`} fluid raised>
+                                <Card.Content>
+                                    <Header as='h2'>
+                                        <Image circular
+                                               src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'/>
+                                        {friend.Friend.name} {friend.Friend.surname}
+                                    </Header>
+                                    <Card.Meta>Friend</Card.Meta>
+                                </Card.Content>
+                            </Card>
+                        )}
+                    </Card.Group>
+                </div>}
+            </div>
+        )
+    };
+
+    render() {
+        const {user} = this.props;
+        const {loading, posts} = this.state;
 
         return (
             loading ?
                 <SegmentLoader/> :
                 <Grid celled='internally'>
-                    <Grid.Row width={12}>
-                        <Grid.Column width={12}>
-                            <Header content={`Surname: ${surname}`}/>
-                            <Header content={`Name: ${name}`}/>
-                            <Header content={`Email: ${email}`}/>
-                        </Grid.Column>
+                    <Grid.Row>
                         <Grid.Column width={4}>
-                            {isAnotherUser
-                            && !friendsRequest.find(friendRequest => friendRequest.User.userId === user.userId || friendRequest.Friend.userId === user.userId)
-                            && !friends.find(friend => friend.User.userId === user.userId || friend.Friend.userId === user.userId)
-                            && <Button fluid color={"pink"} onClick={this.addToFriends}> Add to friends</Button>}
-                            {!isAnotherUser && friendsRequest.length > 0 &&
-                            <div>
-                                <Header size={"huge"}> New friend requests </Header>
-                                <Card.Group centered>
-                                    {friendsRequest.map((friendRequest) =>
-                                        <Card key={`friendRequest ${friendRequest.friendId}`} fluid raised>
-                                            <Card.Content>
-                                                <Header as='h2'>
-                                                    <Image circular
-                                                           src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'/>
-                                                    {friendRequest.User.name} {friendRequest.User.surname}
-                                                </Header>
-                                                <Card.Meta>New Friend</Card.Meta>
-                                                <Card.Description>
-                                                    Steve wants to add you to the group <strong>best friends</strong>
-                                                </Card.Description>
-                                            </Card.Content>
-                                            <Card.Content extra>
-                                                <div className='ui two buttons'>
-                                                    <Button basic content="Approve" color='green'
-                                                            onClick={() => this.approveFriendRequest(friendRequest.friendId)}/>
-                                                    <Button basic content="Decline" color='red'
-                                                            onClick={() => this.declineFriendRequest(friendRequest.friendId)}/>
-                                                </div>
-                                            </Card.Content>
-                                        </Card>
-                                    )}
-                                </Card.Group>
-                            </div>}
+                            <Card.Group centered>
+                                <Card fluid>
+                                    <Image src='https://react.semantic-ui.com/images/avatar/large/matthew.png' wrapped ui={false}/>
+                                    <Card.Content>
+                                        <Header>{user.name} {user.surname}</Header>
+                                        <Card.Meta>
+                                            <span
+                                                className='date'>Joined in {moment(user.createdAt).format('MMMM Do YYYY')}</span>
+                                        </Card.Meta>
+                                        <Card.Description>
+                                            {user.email}
+                                        </Card.Description>
+                                    </Card.Content>
+                                </Card>
+                            </Card.Group>
+                        </Grid.Column>
 
-                            {!isAnotherUser && friends.length > 0 && friends.find(friend => !friend.accepted && friend.User.userId === user.userId) &&
-                            <div>
-                                <Header size={"huge"}> Pending friend requests </Header>
-                                <Card.Group centered>
-                                    {friends.filter(friend => !friend.accepted && friend.User.userId === user.userId).map(friend =>
-                                        <Card key={`friendRequest ${friend.friendId}`} fluid raised>
-                                            <Card.Content>
-                                                <Header as='h2'>
-                                                    <Image circular
-                                                           src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'/>
-                                                    {friend.Friend.name} {friend.Friend.surname}
-                                                </Header>
-                                                <Card.Meta>Pending friend requests</Card.Meta>
-                                            </Card.Content>
-                                            <Card.Content extra>
-                                                <Button fluid basic content="Delete" color='red'
-                                                        onClick={() => this.deleteFriendRequest(friend.friendId)}/>
-                                            </Card.Content>
-                                        </Card>
-                                    )}
-                                </Card.Group>
-                            </div>}
+                        <Grid.Column width={8}>
+                            {posts && posts.map(post =>
+                                <Segment raised key={`post: ${post.postId}`}>
+                                    <PostContainer post={post}/>
+                                </Segment>)}
+                        </Grid.Column>
 
-                            {friends.length > 0 && friends.find(friend => friend.accepted && friend.Friend.userId === user.userId) &&
-                            <div>
-                                <Card.Group centered>
-                                    <Header size={"huge"}> Friends </Header>
-                                    {friends.filter(friend => friend.accepted && friend.Friend.userId === user.userId).map(friend =>
-                                        <Card key={`friendRequest ${friend.friendId}`} fluid raised>
-                                            <Card.Content>
-                                                <Header as='h2'>
-                                                    <Image circular
-                                                           src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'/>
-                                                    {friend.Friend.name} {friend.Friend.surname}
-                                                </Header>
-                                                <Card.Meta>Friend</Card.Meta>
-                                            </Card.Content>
-                                        </Card>
-                                    )}
-                                </Card.Group>
-                            </div>}
+                        <Grid.Column width={4}>
+                            {this.getFriends()}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>

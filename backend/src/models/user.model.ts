@@ -62,6 +62,7 @@ export class User {
     @prop() public passSalt: string;
     @prop({default: 1}) public userType: number;
     @prop({default: false}) public verified: boolean;
+    @prop({}) public avatarUrl: string;
     @arrayProp({
         ref: "Post", // please know for "virtual populate" that "itemsRef" will **not** work here
         foreignField: "User", // compare this value to the local document populate is called on

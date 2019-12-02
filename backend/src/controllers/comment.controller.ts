@@ -29,7 +29,8 @@ export async function createComment(req: Request, res: Response, next: NextFunct
         throw new HttpError(422, "Not valid data");
     }
 
-    const {commentData, postId} = req.body;
+    const postId = req.query.postId;
+    const commentData = req.body;
 
     const post = await PostModel.findOne({postId});
     const comment = new CommentModel({Post: post, User: req.user, ...commentData});
