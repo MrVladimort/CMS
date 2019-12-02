@@ -1,7 +1,7 @@
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from "react-redux";
-import {Comment, Container, Header, Segment} from "semantic-ui-react";
+import {Checkbox, Comment, Container, Header, Segment} from "semantic-ui-react";
 import postApi from "../../../api/post";
 import commentApi from "../../../api/comment";
 import CommentContainer from "../../containers/CommentContainer";
@@ -12,6 +12,7 @@ import PostActionContainer from "../../containers/PostActionContainer";
 interface IPostExactPageState {
     post: PostDTO | null;
     comments: CommentDTO[] | null;
+    collapsed: boolean;
 }
 
 interface IPostExactPageProps {
@@ -31,6 +32,7 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
         this.state = {
             post: null,
             comments: null,
+            collapsed: false,
         }
     }
 
@@ -49,6 +51,12 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
         this.setState({comments});
     };
 
+    // @ts-ignore
+    handleCheckbox = (e, checkbox) => {
+        console.log(checkbox.checked);
+        this.setState({collapsed: checkbox.checked});
+    };
+
     onDeleteClick = async () => {
         const {post} = this.state;
         await postApi.deletePost(post.postId);
@@ -56,7 +64,7 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
     };
 
     render() {
-        const {post, comments} = this.state;
+        const {post, comments, collapsed} = this.state;
         const {user} = this.props;
 
         return (
@@ -73,7 +81,13 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
                             Comments
                         </ Header>
 
-                        <Comment.Group>
+                        <Checkbox
+                            defaultIndeterminate={false}
+                            label='Collapse comments'
+                            onChange={this.handleCheckbox}
+                        />
+
+                        <Comment.Group collapsed={collapsed}>
                             {comments && comments.map(comment => <CommentContainer key={`comment: ${comment.commentId}`}
                                                                                    user={user} comment={comment}/>)}
                         </Comment.Group>
