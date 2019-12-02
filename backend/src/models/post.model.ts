@@ -21,9 +21,12 @@ import {User} from "./user.model";
     },
 })
 export class Post {
-
     public static async findAll(this: ReturnModelType<typeof Post>) {
         return this.find();
+    }
+
+    public static async findAllByUser(this: ReturnModelType<typeof Post>, user: User) {
+        return this.find({User: user});
     }
 
     @prop({unique: true}) public postId: number;

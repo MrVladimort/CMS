@@ -49,8 +49,8 @@ class HomePage extends Component<IHomePageProps, IHomePageState> {
 
                 <Grid.Column width={4}>
                     {comments && comments.map(comment =>
-                        <Comment.Group size='large' key={`comment: ${comment.commentId}`}>
-                            <CommentContainer user={user} comment={comment}/>
+                        <Comment.Group size='large'>
+                            <CommentContainer key={`comment: ${comment.commentId}`} user={user} comment={comment}/>
                         </Comment.Group>)
                     }
                 </Grid.Column>

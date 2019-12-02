@@ -5,8 +5,7 @@ import {Comment, Container, Header, Segment} from "semantic-ui-react";
 import postApi from "../../../api/post";
 import commentApi from "../../../api/comment";
 import CommentContainer from "../../containers/CommentContainer";
-import CommentAddForm, {ICommentAddFormData} from "../../forms/Comment/CommentAddForm";
-import CommetEditForm from "../../forms/Comment/CommetEditForm";
+import CommentForm, {ICommentFormData} from "../../forms/CommentForm";
 import {CommentDTO, PostDTO, UserDTO} from "../../../types";
 import PostActionContainer from "../../containers/PostActionContainer";
 
@@ -38,17 +37,14 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
     async componentDidMount(): Promise<void> {
         const query = new URLSearchParams(this.props.location.search);
         const postId = String(query.get('postId'));
-
         const [postResponse, commentResponse] = await Promise.all([postApi.getPost(postId), commentApi.getAllCommentsByPostId(postId)]);
         this.setState({post: postResponse.post, comments: commentResponse.comments});
     }
 
-    submitCreateComment = async (formData: ICommentAddFormData): Promise<void> => {
+    submitCreateComment = async (formData: ICommentFormData): Promise<void> => {
         const {post, comments} = this.state;
-        formData.postId = post.postId;
         console.log(formData);
         const commentResponse = await commentApi.createComment(formData, post.postId);
-        console.log(comments);
         comments.unshift(commentResponse.comment);
         this.setState({comments});
     };
@@ -70,7 +66,7 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
                     <PostActionContainer delete={this.onDeleteClick} post={post} user={user}/>
                     }
                     <Segment>
-                        <CommentAddForm submit={this.submitCreateComment}/>
+                        <CommentForm submit={this.submitCreateComment}/>
                     </Segment>
                     <Container>
                         <Header as='h3' dividing>

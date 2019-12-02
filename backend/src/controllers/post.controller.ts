@@ -12,6 +12,13 @@ export async function getPost(req: Request, res: Response, next: NextFunction) {
     res.json({post, success: true, status: 200});
 }
 
+export async function getUserPosts(req: Request, res: Response, next: NextFunction) {
+    const userId = req.params.id;
+    const user = await UserModel.findOneById(userId);
+    const posts = await PostModel.findAllByUser(user);
+    res.json({posts, success: true, status: 200});
+}
+
 export async function getAllPosts(req: Request, res: Response, next: NextFunction) {
     const posts = await PostModel.find();
     res.json({posts, success: true, status: 200});

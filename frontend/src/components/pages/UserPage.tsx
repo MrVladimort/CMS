@@ -6,7 +6,6 @@ import {Container, Grid, Segment, Header, Menu, MenuItemProps, Button} from "sem
 import UserInfoContainer from "../containers/User/UserInfoContainer";
 import UserSteamContainer from "../containers/User/UserSteamContainer";
 import UserConversationContainer from "../containers/User/UserConversationsContainer";
-import postApi from "../../api/post";
 import userApi from "../../api/user";
 import SegmentLoader from "../base/SegmentLoader";
 
@@ -43,7 +42,7 @@ class UserPage extends Component<IUserPageProps, IUserPageState> {
         const query = new URLSearchParams(this.props.location.search);
         const userId = parseInt(String(query.get('userId')));
 
-        if (userId) {
+        if (userId && userId !== this.props.user.userId) {
             const anotherUserResponse = await userApi.getAnotherUser(userId);
             this.setState({user: anotherUserResponse.user, isAnotherUser: true});
         } else {
@@ -56,21 +55,16 @@ class UserPage extends Component<IUserPageProps, IUserPageState> {
     handleItemClick = (event: any, {name}: MenuItemProps) => this.setState({activeItem: name});
 
     getUserPageComponent = () => {
-        const {activeItem, user} = this.state;
+        const {activeItem, user, isAnotherUser} = this.state;
 
         switch (activeItem) {
             case 'info':
-                return (<UserInfoContainer user={user}/>);
+                return (<UserInfoContainer isAnotherUser={isAnotherUser} user={user}/>);
             case 'steam':
                 return (<UserSteamContainer user={user}/>);
             case 'conversation':
                 return (<UserConversationContainer user={user}/>);
         }
-    };
-
-    friendsButtonClick = async () => {
-        const anotherUserResponse = await userApi.addToFriends(this.state.user.userId);
-        console.log(anotherUserResponse);
     };
 
     render() {
@@ -80,9 +74,6 @@ class UserPage extends Component<IUserPageProps, IUserPageState> {
             loading ?
                 <SegmentLoader/> :
                 <div>
-                    {isAnotherUser &&
-                        <Button color={"pink"} onClick={this.friendsButtonClick}> Add to friends</Button>
-                    }
                     <Menu pointing>
                         <Menu.Item
                             name='info'
