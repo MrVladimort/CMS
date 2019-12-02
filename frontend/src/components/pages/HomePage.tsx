@@ -43,7 +43,7 @@ class HomePage extends Component<IHomePageProps, IHomePageState> {
                 <Grid.Column width={12}>
                     {posts && posts.map(post =>
                         <Segment raised>
-                            <PostContainer post={post} key={`post: ${post.postId}`}/>
+                            <PostContainer displayFull={false} post={post} key={`post: ${post.postId}`}/>
                         </Segment>)}
                 </Grid.Column>
 

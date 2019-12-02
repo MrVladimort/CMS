@@ -7,13 +7,21 @@ import {PostDTO} from "../../types";
 
 interface IPostProps {
     post: PostDTO,
+    displayFull: boolean
 }
 
 class PostContainer extends Component<IPostProps> {
     static propTypes: any;
 
     render() {
-        const {post} = this.props;
+        const {post, displayFull} = this.props;
+
+        const pStyle = {
+            "white-space": 'nowrap',
+            overflow: 'hidden',
+            "text-overflow": 'ellipsis',
+            "max-width": '200px'
+        };
 
         return (
             <Grid>
@@ -30,7 +38,7 @@ class PostContainer extends Component<IPostProps> {
                     </Grid.Column>
                     <Grid.Column width={10}>
                         <Container>
-                            <p>{post.text}</p>
+                            <p style={!displayFull ? pStyle : null}>{post.text}</p>
                         </Container>
                     </Grid.Column>
                 </Grid.Row>
@@ -46,7 +54,8 @@ class PostContainer extends Component<IPostProps> {
 
 
 PostContainer.propTypes = {
-    post: PropTypes.object.isRequired
+    post: PropTypes.object.isRequired,
+    displayFull: PropTypes.bool
 };
 
 
