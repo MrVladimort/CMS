@@ -12,6 +12,6 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
         req.user = user;
         next();
     } catch (e) {
-        next(e);
+        next(new HttpError(401, "Unauthorized"));
     }
 }

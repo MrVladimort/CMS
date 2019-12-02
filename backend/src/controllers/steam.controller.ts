@@ -2,6 +2,7 @@ import {NextFunction, Request, Response} from "express";
 import {
     getConvertedUserData,
     getFriends,
+    getGamesRecommendations,
     getRecentlyPlayedGames,
     getSteamID64,
     getUserOwnedGames,
@@ -46,6 +47,16 @@ export async function getUserGames(req: Request, res: Response, next: NextFuncti
         const games = await getUserOwnedGames(userId);
         res.json(games);
     } catch (error) {
-        res.json(null);
+        next(error);
+    }
+}
+
+export async function getRecommendations(req: Request, res: Response, next: NextFunction) {
+    try {
+        const userId = req.params.id;
+        const recommendations = await getGamesRecommendations(userId);
+        res.json({recommendations, success: true, status: 200});
+    } catch (error) {
+        next(error);
     }
 }
