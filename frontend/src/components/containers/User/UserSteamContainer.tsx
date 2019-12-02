@@ -14,6 +14,7 @@ interface ISteamPageState {
     friends: SteamFriendUserDTO[] | null
     lastPlayedGames: SteamGameDTO[] | null
     ownedGames: SteamGameDTO[] | null,
+    gameRecommendations: any[],
     loading: boolean,
 }
 
@@ -29,25 +30,30 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             lastPlayedGames: null,
             ownedGames: null,
             loading: true,
+            gameRecommendations: []
         }
     }
 
     async componentDidMount(): Promise<void> {
-        const {user, userFriends} = await steamApi.getUserData("maxvel_trade");
-        const lastPlayedGames = await steamApi.getLastPlayedGames("maxvel_trade");
-        const ownedGames = await steamApi.getOwnedGames("maxvel_trade");
+        const [{user, userFriends}, lastPlayedGames, ownedGames, gameRecommendationsResponse] = await Promise.all([
+            steamApi.getUserData("maxvel_trade"),
+            steamApi.getLastPlayedGames("maxvel_trade"),
+            steamApi.getOwnedGames("maxvel_trade"),
+            steamApi.getRecommendations("maxvel_trade"),
+        ]);
 
         this.setState({
             loading: false,
             userData: user,
             friends: userFriends,
-            lastPlayedGames: lastPlayedGames,
-            ownedGames: ownedGames
+            lastPlayedGames,
+            ownedGames,
+            gameRecommendations: gameRecommendationsResponse.recommendations
         });
     }
 
     render() {
-        const {loading, userData, friends, lastPlayedGames, ownedGames} = this.state;
+        const {loading, userData, friends, lastPlayedGames, ownedGames, gameRecommendations} = this.state;
         console.log(lastPlayedGames);
         return (
             loading ?
@@ -139,30 +145,31 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                                     </Grid.Row>
                                 </Grid>
                             </Segment>
+
+                            <Segment>
+                                <Header textAlign={"center"} size={"huge"}>Game recommendations</Header>
+                                <Grid columns={3} divided>
+                                    <Grid.Row>
+                                        {gameRecommendations && gameRecommendations.map(game =>
+                                            <Grid.Column>
+                                                <Card href={game.header_image}
+                                                      color={"blue"}>
+                                                    <Image src={game.header_image}
+                                                           href={game.header_image}
+                                                           wrapped/>
+
+                                                    <Card.Description>
+                                                        {game.short_description}
+                                                    </Card.Description>
+
+                                                </Card>
+                                            </Grid.Column>
+                                        )}
+                                    </Grid.Row>
+                                </Grid>
+                            </Segment>
                         </Grid.Column>
                     </Grid.Row>
-
-                    {/*<Grid.Row>*/}
-                    {/*    <Grid.Column width={16}>*/}
-                    {/*    <Segment>*/}
-                    {/*        {ownedGames && ownedGames.filter(a => Number(a.playTime) > 1).sort((a, b) => (Number(a.playTime)/60) - (Number(b.playTime)/60)).reverse().slice(0, 7).map(game =>*/}
-                    {/*            <Feed>*/}
-                    {/*                <Feed.Event>*/}
-                    {/*                    <Feed.Label image={game.iconURL} href={"https://store.steampowered.com/app/" + game.appID}/>*/}
-                    {/*                </Feed.Event>*/}
-                    {/*            </Feed>*/}
-                    {/*        )}*/}
-                    {/*</Segment>*/}
-                    {/*</Grid.Column>*/}
-                    {/*</Grid.Row>*/}
-
-                    {/*{friends && friends.map(friend =>*/}
-                    {/*    <Feed>*/}
-                    {/*        <Feed.Event>*/}
-                    {/*            <Feed.Label image={friend.avatar} href={friend.url}/>*/}
-                    {/*        </Feed.Event>*/}
-                    {/*    </Feed>*/}
-                    {/*)}*/}
                 </Grid>
         );
     }
