@@ -191,7 +191,7 @@ class UserInfoContainer extends Component<IUserInfoContainerProps, IUserInfoCont
                         <Grid.Column width={8}>
                             {posts && posts.map(post =>
                                 <Segment raised key={`post: ${post.postId}`}>
-                                    <PostContainer post={post}/>
+                                    <PostContainer displayFull={false} post={post}/>
                                 </Segment>)}
                         </Grid.Column>
 
