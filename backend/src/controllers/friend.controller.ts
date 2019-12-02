@@ -9,7 +9,7 @@ export async function getFriends(req: Request, res: Response, next: NextFunction
 }
 
 export async function getFriendRequests(req: Request, res: Response, next: NextFunction) {
-    const friends = await FriendModel.findAllByFriend(req.user);
+    const friends = await FriendModel.findAllByFriend(req.user, false);
     res.json({friends, success: true, status: 200});
 }
 
@@ -32,9 +32,9 @@ export async function acceptFriend(req: Request, res: Response, next: NextFuncti
     if (friend != null) {
         friend.accepted = true;
         await friend.save();
-        const newFriend = await FriendModel.findOne({User: friend.Friend, Friend: friend.User, accepted: true});
+        const newFriend = new FriendModel({User: friend.Friend, Friend: friend.User, accepted: true});
         await newFriend.save();
-        res.json({success: true, status: 200});
+        res.json({friend, success: true, status: 200});
     } else { throw new HttpError(404, "Friend request not found"); }
 }
 

@@ -45,7 +45,7 @@ export class User {
         return this.findOne({email, verified});
     }
 
-    public static async findOneByID(this: ReturnModelType<typeof User>, userId: number, verified: boolean = true) {
+    public static async findOneById(this: ReturnModelType<typeof User>, userId: number | string, verified: boolean = true) {
         return this.findOne({userId, verified});
     }
 

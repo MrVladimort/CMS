@@ -25,15 +25,16 @@ export class Friend {
         });
     }
 
-    public static async findAllByFriend(this: ReturnModelType<typeof Friend>, friend: User) {
+    public static async findAllByFriend(this: ReturnModelType<typeof Friend>, friend: User, accepted: boolean) {
         return this.find({
             Friend: friend,
+            accepted,
         });
     }
 
     @prop({unique: true}) public friendId: number;
     @prop({required: true, default: false}) public accepted: boolean;
-    @prop({required: true, ref: User}) public User: Ref<User>;
+    @prop({autopopulate: true, required: true, ref: User}) public User: Ref<User>;
     @prop({autopopulate: true, required: true, ref: User}) public Friend: Ref<User>;
 }
 
