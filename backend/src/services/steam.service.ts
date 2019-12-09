@@ -3,6 +3,8 @@ import steamConfig from "../configs/steam.config";
 // tslint:disable-next-line:no-var-requires
 const SteamApi = require("steamapi");
 const steam = new SteamApi (steamConfig.key);
+import {getRecommendations} from "./recommendations.service";
+import {winstonLogger} from "./logger.service";
 
 export const getSteamID64 = (userId: string) => steam.resolve(steamConfig.IdUrl + userId);
 
@@ -60,3 +62,10 @@ export const getRecentlyPlayedGames = (userId: string) => steam.getUserRecentGam
 export const getUserStats = (userId: string, appId: number) => steam.getUserStats(userId, appId);
 
 export const getUserOwnedGames = (userId: string) => steam.getUserOwnedGames(userId);
+
+export const getGamesRecommendations = async (userId: string) => {
+    const ID64 = await getSteamID64(userId);
+    const gamesIds = await getRecommendations(ID64);
+    winstonLogger.info(gamesIds);
+    return await Promise.all(gamesIds.map(async (gameId) => await steam.getGameDetails(gameId)));
+};

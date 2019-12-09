@@ -139,17 +139,17 @@ class UserInfoContainer extends Component<IUserInfoContainerProps, IUserInfoCont
                     </Card.Group>
                 </div>}
 
-                {friends.length > 0 && friends.find(friend => friend.accepted && friend.Friend.userId === user.userId) &&
+                {friends.length > 0 && friends.find(friend => friend.accepted && friend.User.userId === user.userId) &&
                 <div>
                     <Card.Group centered>
                         <Header size="huge"> Friends </Header>
-                        {friends.filter(friend => friend.accepted && friend.Friend.userId === user.userId).map(friend =>
+                        {friends.filter(friend => friend.accepted && friend.User.userId === user.userId).map(friend =>
                             <Card key={`friends ${friend.friendId}`} fluid raised>
                                 <Card.Content>
                                     <Header as='h2'>
                                         <Image circular
                                                src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'/>
-                                        {friend.Friend.name} {friend.Friend.surname}
+                                        {friend.Friend.name} {friend.Friend.surname}s
                                     </Header>
                                     <Card.Meta>Friend</Card.Meta>
                                 </Card.Content>

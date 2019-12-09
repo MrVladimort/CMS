@@ -27,6 +27,7 @@
     "mongoose": "^5.7.7",
     "mongoose-sequence": "^5.2.2",
     "mongoose-autopopulate": "^0.9.1",
+    "axios": "^0.19.0",
     "morgan": "^1.9.1",
     "nodemailer": "^6.3.1",
     "pug": "^2.0.4",
@@ -36,6 +37,7 @@
     "xregexp": "^4.2.4"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/socket.io": "^2.1.4",
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.1",
