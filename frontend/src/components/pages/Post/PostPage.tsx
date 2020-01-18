@@ -39,7 +39,7 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                 <Grid>
                     <Grid.Row>
                         <Link to={`/post/add`}>
-                            <Button fluid color={"green"}>Add post</Button>
+                            <Button fluid color={"green"} >Add post</Button>
                         </Link>
                     </Grid.Row>
                 </Grid>

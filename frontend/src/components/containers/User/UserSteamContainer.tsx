@@ -1,7 +1,20 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {SteamFriendUserDTO, SteamGameDTO, SteamUserDTO, UserDTO} from "../../../types"
-import {Grid, Segment, Header, Card, Image, Flag, FlagNameValues, Icon, Feed, Loader, Dimmer} from "semantic-ui-react";
+import {
+    Grid,
+    Segment,
+    Header,
+    Card,
+    Image,
+    Flag,
+    FlagNameValues,
+    Icon,
+    Feed,
+    Modal,
+    Input,
+    Button
+} from "semantic-ui-react";
 import steamApi from "../../../api/steam";
 import SegmentLoader from "../../base/SegmentLoader";
 
@@ -9,13 +22,19 @@ interface IUserSteamContainerProps {
     user: UserDTO
 }
 
+export interface ISteamAddFormData {
+    steamId: any,
+}
+
 interface ISteamPageState {
+    formData: ISteamAddFormData,
     userData: SteamUserDTO | null;
     friends: SteamFriendUserDTO[] | null
     lastPlayedGames: SteamGameDTO[] | null
     ownedGames: SteamGameDTO[] | null,
     gameRecommendations: any[],
     loading: boolean,
+    steamId: any,
 }
 
 class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageState> {
@@ -25,38 +44,94 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
         super(props);
 
         this.state = {
+            formData:{
+                steamId: null,
+            },
             userData: null,
             friends: null,
             lastPlayedGames: null,
             ownedGames: null,
             loading: true,
+            steamId: null,
             gameRecommendations: []
-        }
+        };
     }
 
-    async componentDidMount(): Promise<void> {
-        const [{user, userFriends}, lastPlayedGames, ownedGames, gameRecommendationsResponse] = await Promise.all([
-            steamApi.getUserData("maxvel_trade"),
-            steamApi.getLastPlayedGames("maxvel_trade"),
-            steamApi.getOwnedGames("maxvel_trade"),
-            steamApi.getRecommendations("maxvel_trade"),
-        ]);
+    onChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({
+        formData: {
+            ...this.state.formData,
+            [e.target.name]: e.target.value
+        }
+    });
 
-        this.setState({
-            loading: false,
-            userData: user,
-            friends: userFriends,
-            lastPlayedGames,
-            ownedGames,
-            gameRecommendations: gameRecommendationsResponse.recommendations
-        });
+    checkSteamID = async () => {
+        const steamID = this.state.formData.steamId;
+
+        const [{userId}, userData] = await Promise.all([steamApi.checkSteamId(steamID), steamApi.checkProfileStatus(steamID)]);
+        console.log(userId, userData);
+        if (userId && userData.status.commentPermission) {
+            const [{user, userFriends}, lastPlayedGames, ownedGames] = await Promise.all([
+                steamApi.getUserData(steamID),
+                steamApi.getLastPlayedGames(steamID),
+                steamApi.getOwnedGames(steamID),
+                steamApi.getRecommendations(steamID),
+            ]);
+
+            this.setState({
+                loading: false,
+                userData: user,
+                friends: userFriends,
+                lastPlayedGames,
+                ownedGames,
+                steamId: this.state.formData.steamId,
+                gameRecommendations: []
+            });
+        }
+    };
+
+    async componentDidMount(): Promise<void> {
+        // get user steam ID
+        // const [{user, userFriends}, lastPlayedGames, ownedGames, gameRecommendationsResponse] = await Promise.all([
+        //     steamApi.getUserData("maxvel_trade"),
+        //     steamApi.getLastPlayedGames("maxvel_trade"),
+        //     steamApi.getOwnedGames("maxvel_trade"),
+        //     steamApi.getRecommendations("maxvel_trade"),
+        // ]);
+        //
+        // this.setState({
+        //     loading: false,
+        //     userData: user,
+        //     friends: userFriends,
+        //     lastPlayedGames,
+        //     ownedGames,
+        //     steamId: null,
+        //     gameRecommendations: gameRecommendationsResponse.recommendations
+        // });
     }
 
     render() {
-        const {loading, userData, friends, lastPlayedGames, ownedGames, gameRecommendations} = this.state;
-        console.log(lastPlayedGames);
+        const {loading, userData, friends, lastPlayedGames, ownedGames, gameRecommendations, steamId} = this.state;
         return (
-            loading ?
+            steamId == null ?
+                <div>
+                    <Modal defaultOpen={true} size={"tiny"}>
+                        <Modal.Header>Set steam id</Modal.Header>
+                        <Modal.Content>
+                            <Header>Please make sure that you steam profile isn't private</Header>
+                            <Input focus placeholder='steam id...' onChange={this.onChange} name='steamId'/>
+                        </Modal.Content>
+                        <Modal.Actions>
+                            <Button
+                                onClick={this.checkSteamID}
+                                positive
+                                icon='checkmark'
+                                labelPosition='right'
+                                content='Set'
+                            />
+                        </Modal.Actions>
+                    </Modal>
+                </div>
+                : loading ?
                 <SegmentLoader/> :
                 <Grid celled='internally'>
                     <Grid.Row>
@@ -150,7 +225,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                                 <Header textAlign={"center"} size={"huge"}>Game recommendations</Header>
                                 <Grid columns={3} divided>
                                     <Grid.Row>
-                                        {gameRecommendations && gameRecommendations.map(game =>
+                                        {gameRecommendations.length > 0 && gameRecommendations.map(game =>
                                             <Grid.Column>
                                                 <Card href={game.header_image}
                                                       color={"blue"}>
