@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Menu, Button, Container} from 'semantic-ui-react';
+import {Menu, Button, Container, Image} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
@@ -82,10 +82,11 @@ class Header extends Component<IHeaderProps, IHeaderState> {
             <div className='header'>
                 <Menu fluid compact size='massive' borderless fixed='top'>
                     <Menu.Item>
-                        <img src='https://seeklogo.com/images/F/Felix-logo-4555675C70-seeklogo.com.png'/>
+                        <Link to={'/'}>
+                            <Image size='mini' src='https://seeklogo.com/images/F/Felix-logo-4555675C70-seeklogo.com.png'/>
+                        </Link>
                     </Menu.Item>
 
-                    <Menu.Item><Link to={'/'}>Home</Link></Menu.Item>
                     <Menu.Item><Link to={'/posts'}>Posts</Link></Menu.Item>
 
                     <Menu.Menu position='right'>

@@ -28,7 +28,7 @@ class PostActionContainer extends Component<IPostProps> {
                     </Link>}
                 </Button.Group>
 
-                <PostContainer displayFull={true} post={post}/>
+                <PostContainer displaySetting={{displayFull: true, maxCharacters: 0}} post={post}/>
             </Segment>
         )
     }

@@ -1,3 +1,4 @@
+
 import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import {Button, Container, Grid, Header, Segment, Image} from "semantic-ui-react";
@@ -7,21 +8,18 @@ import {PostDTO} from "../../types";
 
 interface IPostProps {
     post: PostDTO,
-    displayFull: boolean
+    displaySetting: any
 }
 
 class PostContainer extends Component<IPostProps> {
     static propTypes: any;
 
     render() {
-        const {post, displayFull} = this.props;
+        const {post, displaySetting} = this.props;
 
-        const pStyle = {
-            "white-space": 'nowrap',
-            overflow: 'hidden',
-            "text-overflow": 'ellipsis',
-            "max-width": '200px'
-        };
+        if (!displaySetting.displayFull && post.text.length > displaySetting.maxCharacters) {
+            post.text = post.text.substr(0, displaySetting.maxCharacters) + "...";
+        }
 
         return (
             <Grid>
@@ -38,7 +36,7 @@ class PostContainer extends Component<IPostProps> {
                     </Grid.Column>
                     <Grid.Column width={10}>
                         <Container>
-                            <p style={!displayFull ? pStyle : null}>{post.text}</p>
+                            <p>{post.text}</p>
                         </Container>
                     </Grid.Column>
                 </Grid.Row>

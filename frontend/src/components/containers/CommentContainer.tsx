@@ -8,14 +8,19 @@ import {CommentDTO, UserDTO} from "../../types";
 interface ICommentProps {
     comment: CommentDTO,
     user: UserDTO,
+    displayFull: boolean
 }
 
 class CommentContainer extends Component<ICommentProps> {
     static propTypes: any;
 
     render() {
-        const {comment, user} = this.props;
-        const {Post: post, User: commentUser, text, grade, createdAt} = comment;
+        const {comment, user, displayFull} = this.props;
+        let {Post: post, User: commentUser, text, grade, createdAt} = comment;
+
+        if (!displayFull && text.length > 500) {
+            text = text.substr(0, 100) + "...";
+        }
 
         return (
             <Comment>

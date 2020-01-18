@@ -46,9 +46,9 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                 <Grid columns={4} divided>
                     <Grid.Row>
                         {posts && posts.map(post =>
-                            <Grid.Column>
+                            <Grid.Column stretched>
                                 <Segment raised>
-                                    <PostContainer displayFull={false} post={post} key={`post:${post.postId}`}/>
+                                    <PostContainer displaySetting={{displayFull: false, maxCharacters: 20}} post={post} key={`post:${post.postId}`}/>
                                 </Segment>
                             </Grid.Column>
                         )}

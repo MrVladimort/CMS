@@ -43,14 +43,14 @@ class HomePage extends Component<IHomePageProps, IHomePageState> {
                 <Grid.Column width={12}>
                     {posts && posts.map(post =>
                         <Segment raised>
-                            <PostContainer displayFull={false} post={post} key={`post: ${post.postId}`}/>
+                            <PostContainer displaySetting={{isDisplayFull: false, maxCharacters: 2000}} post={post} key={`post: ${post.postId}`}/>
                         </Segment>)}
                 </Grid.Column>
 
                 <Grid.Column width={4}>
                     {comments && comments.map(comment =>
                         <Comment.Group size='large'>
-                            <CommentContainer key={`comment: ${comment.commentId}`} user={user} comment={comment}/>
+                            <CommentContainer key={`comment: ${comment.commentId}`} user={user} comment={comment} displayFull={false}/>
                         </Comment.Group>)
                     }
                 </Grid.Column>

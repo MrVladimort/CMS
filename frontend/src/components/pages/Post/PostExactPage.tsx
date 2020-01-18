@@ -89,7 +89,7 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
 
                         <Comment.Group collapsed={collapsed}>
                             {comments && comments.map(comment => <CommentContainer key={`comment: ${comment.commentId}`}
-                                                                                   user={user} comment={comment}/>)}
+                                                                                   user={user} comment={comment} displayFull={true}/>)}
                         </Comment.Group>
                     </Container>
                 </Segment>

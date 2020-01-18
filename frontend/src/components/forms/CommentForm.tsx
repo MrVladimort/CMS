@@ -72,6 +72,7 @@ class CommitAddForm extends Component<ICommentFormProps, ICommentFormState> {
 
     render() {
         const {formData, errors, loading} = this.state;
+
         return (
             <Container>
                 {!_.isEmpty(errors) && <ErrorMessage header='Something went wrong' errors={errors}/>}
