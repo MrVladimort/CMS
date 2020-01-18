@@ -89,26 +89,6 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
         }
     };
 
-    async componentDidMount(): Promise<void> {
-        // get user steam ID
-        // const [{user, userFriends}, lastPlayedGames, ownedGames, gameRecommendationsResponse] = await Promise.all([
-        //     steamApi.getUserData("maxvel_trade"),
-        //     steamApi.getLastPlayedGames("maxvel_trade"),
-        //     steamApi.getOwnedGames("maxvel_trade"),
-        //     steamApi.getRecommendations("maxvel_trade"),
-        // ]);
-        //
-        // this.setState({
-        //     loading: false,
-        //     userData: user,
-        //     friends: userFriends,
-        //     lastPlayedGames,
-        //     ownedGames,
-        //     steamId: null,
-        //     gameRecommendations: gameRecommendationsResponse.recommendations
-        // });
-    }
-
     render() {
         const {loading, userData, friends, lastPlayedGames, ownedGames, gameRecommendations, steamId} = this.state;
         return (
