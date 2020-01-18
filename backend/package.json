@@ -32,7 +32,7 @@
     "nodemailer": "^6.3.1",
     "pug": "^2.0.4",
     "steamapi": "git+https://git@github.com/xDimGG/node-steamapi.git",
-    "@typegoose/typegoose": "^6.1.6",
+    "@typegoose/typegoose": "^6.2.1",
     "winston": "^3.2.1",
     "xregexp": "^4.2.4"
   },

@@ -1,7 +1,7 @@
 import {NextFunction, Request, Response} from "express";
+import {validationResult} from "express-validator/check";
 import HttpError from "../errors/http.error";
 import UserModel from "../models/user.model";
-import {validationResult} from "express-validator/check";
 
 const refreshTokens: Set<string> = new Set();
 
@@ -48,7 +48,7 @@ export async function withAccessToken(req: Request, res: Response, next: NextFun
     const token = accessToken.replace("Bearer ", ""); // jwt = req.header.Authorization
     const user = await UserModel.findOneWithAccessToken(token);
 
-    if (!user) return next(new HttpError(404, "User not found"));
+    if (!user) { return next(new HttpError(404, "User not found")); }
 
     const tokens = user.generateJWT();
     res.json({user, tokens, success: true, status: 200});
