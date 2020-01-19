@@ -14,7 +14,8 @@ export interface IAuthTokens {
 }
 
 @plugin(AutoIncrement, {inc_field: "userId"})
-@modelOptions({schemaOptions: {
+@modelOptions({
+    schemaOptions: {
         toJSON: {
             transform: (doc: DocumentType<User>, ret: DocumentType<User>, options: any) => {
                 delete ret._id;
@@ -37,19 +38,19 @@ export class User {
         user.hashAndSetPass(pass);
     }
 
-    public static async findAllByIdIn(this: ReturnModelType<typeof User>, ids: number[]): Promise<User[]> {
+    public static async findAllByIdIn(this: ReturnModelType<typeof User>, ids: number[]): Promise<Array<DocumentType<User>>> {
         return this.find({userId: {$in: ids}});
     }
 
-    public static async findOneByEmail(this: ReturnModelType<typeof User>, email: string, verified: boolean = true): Promise<User> {
+    public static async findOneByEmail(this: ReturnModelType<typeof User>, email: string, verified: boolean = true): Promise<DocumentType<User>> {
         return this.findOne({email, verified});
     }
 
-    public static async findOneById(this: ReturnModelType<typeof User>, userId: number | string, verified: boolean = true) {
+    public static async findOneById(this: ReturnModelType<typeof User>, userId: number | string, verified: boolean = true): Promise<DocumentType<User>> {
         return this.findOne({userId, verified});
     }
 
-    public static async findOneWithAccessToken(this: ReturnModelType<typeof User>, token: string, verified: boolean = true) {
+    public static async findOneWithAccessToken(this: ReturnModelType<typeof User>, token: string, verified: boolean = true): Promise<DocumentType<User>> {
         const email = verifyAccessToken(token);
         return this.findOneByEmail(email, verified);
     }
