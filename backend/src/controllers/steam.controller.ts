@@ -39,7 +39,25 @@ export async function getGamesCategories(req: Request, res: Response, next: Next
             key: "CS GO",
             text: "CS GO",
             value: "CS GO",
-            image: {avatar: true, src: "https://www.freeiconspng.com/uploads/csgo-icon-12.png"},
+            image: {avatar: true, src: "https://www.freeiconspng.com/uploads/counter-strike-global-offensive-csgo-icon-8.png"},
+        },
+        {
+            key: "DOTA 2",
+            text: "DOTA 2",
+            value: "DOTA 2",
+            image: {avatar: true, src: "https://p1.hiclipart.com/preview/835/152/984/marei-icon-theme-dota-2-logo.jpg"},
+        },
+        {
+            key: "PUBG",
+            text: "PUBG",
+            value: "PUBG",
+            image: {avatar: true, src: "https://i.pinimg.com/originals/c0/e8/65/c0e86501b0a44a361f7e4b468ff92917.jpg"},
+        },
+        {
+            key: "H1Z1",
+            text: "H1Z1",
+            value: "H1Z1",
+            image: {avatar: true, src: "https://b.thumbs.redditmedia.com/P-1Fp9gDMKcL4ZIFTJaN0O6yobTcv3ldWD2fHls4qPc.png"},
         },
     ]);
 }

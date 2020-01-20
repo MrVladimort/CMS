@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {Menu, Button, Container, Image} from 'semantic-ui-react';
-import PropTypes from 'prop-types';
+import React, {Component, SyntheticEvent} from 'react';
+import {Menu, Button, Container, Image, Input, Icon, Dropdown} from 'semantic-ui-react';
+import PropTypes, {object} from 'prop-types';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import mainConfig from "../config";
@@ -41,8 +41,22 @@ class Header extends Component<IHeaderProps, IHeaderState> {
         history.push('/');
     };
 
+    // @ts-ignore
+    onUserDropdownChange = (event: SyntheticEvent, data: any) => {
+        console.log(data.value);
+        const {logout, history, dispatch} = this.props;
+        if (data.value === '/') { logout(dispatch); }
+        history.push(data.value);
+    };
+
     getAuthButtons = () => {
         const {isAuth, user} = this.props;
+
+        const options = [
+            {key: 'profile', text: 'Your Profile', value: '/user'},
+            {key: 'sign-out', text: 'Logout', value: '/'},
+            ],
+            trigger = ( <span> <Icon name='user' /> Hello, {user.name} </span> );
 
         return (
             <div>
@@ -61,16 +75,14 @@ class Header extends Component<IHeaderProps, IHeaderState> {
 
                 {isAuth && <Menu.Menu position='right'>
 
-                    <Link to='/user'>
+                    <Link to='/post/add'>
                         <Menu.Item>
-                            <Button>
-                                {`Hello, ${user.name} ${user.surname}`}
-                            </Button>
+                            <Button fluid color={"green"} >Add post</Button>
                         </Menu.Item>
                     </Link>
 
                     <Menu.Item>
-                        <Button onClick={this.clickLogout} primary>Logout</Button>
+                        <Dropdown trigger={trigger} options={options} onChange={this.onUserDropdownChange}/>
                     </Menu.Item>
                 </Menu.Menu>}
             </div>
@@ -80,14 +92,18 @@ class Header extends Component<IHeaderProps, IHeaderState> {
     render() {
         return (
             <div className='header'>
-                <Menu fluid compact size='massive' borderless fixed='top'>
+                <Menu fluid compact size='massive' borderless fixed='top' inverted>
                     <Menu.Item>
                         <Link to={'/'}>
-                            <Image size='mini' src='https://seeklogo.com/images/F/Felix-logo-4555675C70-seeklogo.com.png'/>
+                            <Image size='mini' src='https://logoeps.com/wp-content/uploads/2012/10/snoopy-vector.png'/>
                         </Link>
                     </Menu.Item>
 
                     <Menu.Item><Link to={'/posts'}>Posts</Link></Menu.Item>
+
+                    <Menu.Item>
+                        <Input icon='search' placeholder='Search post...' />
+                    </Menu.Item>
 
                     <Menu.Menu position='right'>
                         {this.getAuthButtons()}

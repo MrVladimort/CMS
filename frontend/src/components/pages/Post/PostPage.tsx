@@ -36,18 +36,11 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
 
         return (
             <Container>
-                <Grid>
-                    <Grid.Row>
-                        <Link to={`/post/add`}>
-                            <Button fluid color={"green"} >Add post</Button>
-                        </Link>
-                    </Grid.Row>
-                </Grid>
                 <Grid columns={4} divided>
                     <Grid.Row>
                         {posts && posts.map(post =>
                             <Grid.Column stretched>
-                                <Segment raised>
+                                <Segment raised  >
                                     <PostContainer displaySetting={{displayFull: false, maxCharacters: 20}} post={post} key={`post:${post.postId}`}/>
                                 </Segment>
                             </Grid.Column>

@@ -69,7 +69,6 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
 
         return (
             <Container>
-                <Segment raised>
                     {post &&
                     <PostActionContainer delete={this.onDeleteClick} post={post} user={user}/>
                     }
@@ -92,7 +91,6 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
                                                                                    user={user} comment={comment} displayFull={true}/>)}
                         </Comment.Group>
                     </Container>
-                </Segment>
             </Container>
         )
     }
