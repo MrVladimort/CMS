@@ -1,3 +1,4 @@
+import {DocumentType} from "@typegoose/typegoose";
 import bodyParser from "body-parser";
 import cors from "cors";
 import express from "express";
@@ -6,17 +7,17 @@ import {Server} from "http";
 import serverConfig from "./configs/server.config";
 import {errorHandler, notFound} from "./middlewares/basic.middleware";
 import {connectToDb} from "./models";
-import {initSocket} from "./services/socket.service";
 import {User} from "./models/user.model";
 import routes from "./routes";
 import {morganLogger, winstonLogger} from "./services/logger.service";
+import {initSocket} from "./services/socket.service";
 
 winstonLogger.info(`Process: ${process.cwd()}`);
 
 declare global {
     namespace Express {
         interface Request {
-            user: User;
+            user: DocumentType<User>;
         }
     }
 }

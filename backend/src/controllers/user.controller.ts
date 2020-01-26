@@ -10,3 +10,11 @@ export async function getAnotherUser(req: Request, res: Response, next: NextFunc
     const anotherUser = await getUserInfo(userId);
     res.json({user: anotherUser, success: true, status: 200});
 }
+
+export async function setSteamId(req: Request, res: Response, next: NextFunction) {
+    const steamId = req.query.steaId;
+    const user = req.user;
+    user.steamId = steamId;
+    await user.save();
+    res.json({success: true, status: 200});
+}
