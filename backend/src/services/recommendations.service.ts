@@ -14,16 +14,10 @@ export async function authorize(): Promise<any> {
     }
 }
 
-export async function getRecommendations(steamUserId: number): Promise<number[]> {
-    const authorizeToken = await authorize();
-    try {
-        return await axios.get(`http://anfatum.pythonanywhere.com/recommend/user/${steamUserId}`, {
-            headers: {
-                Authorization: `Token ${authorizeToken.token}`,
-            },
-        }).then((res) => res.data.games);
-    } catch (e) {
-        winstonLogger.error(e);
-        throw new HttpError(418, "Recommendations service failed for userId " + steamUserId);
-    }
+export async function getUserRecommendations(steamUserId: number): Promise<number[]> {
+    return await axios.get(`http://anfatum.pythonanywhere.com/recommend/users/${steamUserId}`).then((res) => res.data.games);
+}
+
+export async function getGamesRecommendations(steamUserId: number): Promise<number[]> {
+    return await axios.get(`http://anfatum.pythonanywhere.com/recommend/games/${steamUserId}`).then((res) => res.data.games);
 }

@@ -21,4 +21,5 @@ export default {
     getFriendsRequest: (): Promise<IFriendsResponse> => axios.get(`${mainConfig.apiHost}/friends/requests`).then(res => res.data),
     acceptFriendRequest: (id: string | number): Promise<IFriendResponse> => axios.put(`${mainConfig.apiHost}/friends/${id}`).then(res => res.data),
     deleteFriend: (id: string | number): Promise<IResponse> => axios.delete(`${mainConfig.apiHost}/friends/${id}`).then(res => res.data),
+    setSteamId: (steamId: string): Promise<IResponse> => axios.put(`${mainConfig.apiHost}/users/steam`, {steamId}).then(res => res.data),
 }

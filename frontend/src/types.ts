@@ -14,6 +14,7 @@ export interface UserDTO extends AuditingDTO {
     surname: string;
     email: string;
     userType: number;
+    steamId: string;
 }
 
 export interface FriendDTO extends AuditingDTO {

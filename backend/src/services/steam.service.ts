@@ -1,10 +1,9 @@
-import momentjs from "moment";
 import steamConfig from "../configs/steam.config";
 // tslint:disable-next-line:no-var-requires
 const SteamApi = require("steamapi");
-const steam = new SteamApi (steamConfig.key);
-import {getRecommendations} from "./recommendations.service";
+const steam = new SteamApi(steamConfig.key);
 import {winstonLogger} from "./logger.service";
+import * as recommendationService from "./recommendations.service";
 
 export const getSteamID64 = (userId: string) => steam.resolve(steamConfig.IdUrl + userId);
 
@@ -21,7 +20,7 @@ export const getConvertedUserData = async (userId: string) => {
         createDate: createDate.getFullYear(),
         nickname: userData.nickname,
         realName: userData.realName,
-        countryCode: userData.countryCode.toLowerCase(),
+        countryCode: userData.countryCode ? userData.countryCode.toLowerCase() : "en",
         level: steamLevel,
     };
 };
@@ -65,7 +64,21 @@ export const getUserOwnedGames = (userId: string) => steam.getUserOwnedGames(use
 
 export const getGamesRecommendations = async (userId: string) => {
     const ID64 = await getSteamID64(userId);
-    const gamesIds = await getRecommendations(ID64);
-    winstonLogger.info(gamesIds);
-    return await Promise.all(gamesIds.map(async (gameId) => await steam.getGameDetails(gameId)));
+    const gamesIds = await recommendationService.getGamesRecommendations(ID64);
+    const gamesResponseWithNulls =  await Promise.all(gamesIds.map(async (gameId: number) => getGameDetails(gameId)));
+    return gamesResponseWithNulls.filter((game: any) => game);
+};
+
+export const getUserRecommendations = async (userId: string) => {
+    const ID64 = await getSteamID64(userId);
+    const gamesIds = await recommendationService.getUserRecommendations(ID64);
+    return await Promise.all(gamesIds.map(async (gameId: number) => getGameDetails(gameId)).filter((game: any) => game != null));
+};
+
+const getGameDetails = async (gameId: number) => {
+    try {
+        return await steam.getGameDetails(gameId);
+    } catch (e) {
+        return null;
+    }
 };
