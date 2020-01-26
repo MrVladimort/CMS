@@ -33,7 +33,7 @@ interface ISteamPageState {
     friends: SteamFriendUserDTO[] | null
     lastPlayedGames: SteamGameDTO[] | null
     ownedGames: SteamGameDTO[] | null,
-    gameRecommendations: any[],
+    gameRecommendations: any[any],
     loading: boolean,
     steamId: any,
 }
@@ -71,7 +71,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             loading: true
         });
 
-        const [{user, userFriends}, lastPlayedGames, ownedGames] = await Promise.all([
+        const [{user, userFriends}, lastPlayedGames, ownedGames, gameRecommendations] = await Promise.all([
             steamApi.getUserData(steamId),
             steamApi.getLastPlayedGames(steamId),
             steamApi.getOwnedGames(steamId),
@@ -85,7 +85,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             lastPlayedGames,
             ownedGames,
             steamId: this.state.formData.steamId,
-            gameRecommendations: []
+            gameRecommendations
         });
     };
 
@@ -229,7 +229,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                                     <Header textAlign={"center"} size={"huge"}>Game recommendations</Header>
                                     <Grid columns={3} divided>
                                         <Grid.Row>
-                                            {gameRecommendations.length > 0 && gameRecommendations.map(game =>
+                                            {gameRecommendations.recommendations.length > 0 && gameRecommendations.recommendations.map((game: { header_image: string; short_description: React.ReactNode; }) =>
                                                 <Grid.Column>
                                                     <Card href={game.header_image}
                                                           color={"blue"}>
