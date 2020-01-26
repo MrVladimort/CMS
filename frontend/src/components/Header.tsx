@@ -11,7 +11,7 @@ import {PostDTO} from "../types";
 interface IHeaderState {
     activeItem: string
     search: {
-        results: PostDTO[],
+        results: any[],
         value: string,
         isLoading: boolean
     }
@@ -53,8 +53,6 @@ class Header extends Component<IHeaderProps, IHeaderState> {
     };
 
     onSearchChange = async (event: SyntheticEvent, {value}: any) => {
-        console.log(value);
-
         this.setState({
             search: {
                 ...this.state.search,
@@ -63,16 +61,19 @@ class Header extends Component<IHeaderProps, IHeaderState> {
             }
         });
 
-        console.log(this.state);
-
         if (value.length >= 3) {
-            const searchResultResponse = await searchApi.searchPosts(value);
+            const searchResultResponse = await searchApi.searchPosts(value),
+                searchResults = searchResultResponse.posts.map(post => ({
+                    title: post.title,
+                    image: post.imageLink,
+                    postId: post.postId
+                }) );
 
             this.setState({
                 search: {
                     ...this.state.search,
                     isLoading: false,
-                    results: searchResultResponse.posts
+                    results: searchResults
                 }
             })
         }
