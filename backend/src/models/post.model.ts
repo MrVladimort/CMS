@@ -1,7 +1,7 @@
 import {arrayProp, DocumentType, getModelForClass, modelOptions, plugin, prop, Ref, ReturnModelType} from "@typegoose/typegoose";
+import {Category} from "./category.model";
 import {Comment} from "./comment.model";
 import {AutoIncrement, AutoPopulate} from "./index";
-import {Message} from "./message.model";
 import {User} from "./user.model";
 
 @plugin(AutoIncrement, {inc_field: "postId"})
@@ -29,11 +29,16 @@ export class Post {
         return this.find({User: user});
     }
 
+    public static searchByTitle(this: ReturnModelType<typeof Post>, title: string) {
+        return this.find({title: {$regex: ".*" + title + ".*", $options: "i"}}).limit(5);
+    }
+
     @prop({unique: true}) public postId: number;
     @prop({required: true}) public text: string;
     @prop({}) public imageLink: string;
-    @prop({required: true, unique: true}) public title: string;
+    @prop({required: true, unique: true, trim: true}) public title: string;
     @prop({autopopulate: true, required: true, ref: User}) public User: Ref<User>;
+    @prop({autopopulate: true, required: true, ref: Category}) public Category: Ref<Category>;
     @prop({required: true, default: 0}) public views: number;
     @arrayProp({
         ref: Comment, // please know for "virtual populate" that "itemsRef" will **not** work here

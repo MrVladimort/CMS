@@ -7,6 +7,7 @@ import friendRoute from "./friend.route";
 import homeRoute from "./home.route";
 import postRoute from "./post.route";
 import registerRoute from "./register.route";
+import searchRoute from "./search.route";
 import steamRoute from "./steam.route";
 import userRoute from "./user.route";
 
@@ -21,4 +22,5 @@ export default function(app: Application) {
     app.use("/api/conversations", conversationRoute);
     app.use("/api/friends", friendRoute);
     app.use("/api/steam", steamRoute);
+    app.use("/api/search", searchRoute);
 }

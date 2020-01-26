@@ -31,12 +31,19 @@ export interface CommentDTO extends AuditingDTO {
     grade: number;
 }
 
+export interface CategoryDTO extends AuditingDTO {
+    categoryId: number;
+    name: string;
+    imageLink: string;
+}
+
 export interface PostDTO extends AuditingDTO {
     postId: number;
     text: string;
     imageLink: string;
     title: string;
     User: UserDTO;
+    Category: CategoryDTO;
     views: number;
     createAt: Date;
     updatedAt: Date;

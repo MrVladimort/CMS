@@ -1,5 +1,5 @@
 import Router from "express-promise-router";
-import {createPost, deletePost, editPost, getAllPosts, getPost, getUserPosts} from "../controllers/post.controller";
+import {createPost, deletePost, editPost, getAllPosts, getPost, getUserPosts, searchPost} from "../controllers/post.controller";
 import {authMiddleware} from "../middlewares/auth.middleware";
 
 const router = Router();

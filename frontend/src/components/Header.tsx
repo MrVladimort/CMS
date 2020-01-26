@@ -1,13 +1,20 @@
 import React, {Component, SyntheticEvent} from 'react';
-import {Menu, Button, Container, Image, Input, Icon, Dropdown} from 'semantic-ui-react';
-import PropTypes, {object} from 'prop-types';
+import {Menu, Button, Container, Image, Input, Icon, Dropdown, Search} from 'semantic-ui-react';
+import PropTypes from 'prop-types';
 import {Link} from "react-router-dom";
 import {connect} from "react-redux";
 import mainConfig from "../config";
 import authActions from "../redux/actions/auth";
+import searchApi from "../api/search"
+import {PostDTO} from "../types";
 
 interface IHeaderState {
     activeItem: string
+    search: {
+        results: PostDTO[],
+        value: string,
+        isLoading: boolean
+    }
 }
 
 interface IHeaderProps {
@@ -31,32 +38,64 @@ class Header extends Component<IHeaderProps, IHeaderState> {
         super(props);
 
         this.state = {
-            activeItem: ""
+            activeItem: "",
+            search: {
+                results: [],
+                value: "",
+                isLoading: false
+            }
         };
     }
 
-    clickLogout = () => {
-        const {logout, history, dispatch} = this.props;
-        logout(dispatch);
-        history.push('/');
+    onResultSelect = (event: SyntheticEvent, {result}: any) => {
+        const {history} = this.props;
+        history.push(`/post/exact?postId=${result.postId}`)
     };
 
-    // @ts-ignore
-    onUserDropdownChange = (event: SyntheticEvent, data: any) => {
-        console.log(data.value);
+    onSearchChange = async (event: SyntheticEvent, {value}: any) => {
+        console.log(value);
+
+        this.setState({
+            search: {
+                ...this.state.search,
+                isLoading: true,
+                value
+            }
+        });
+
+        console.log(this.state);
+
+        if (value.length >= 3) {
+            const searchResultResponse = await searchApi.searchPosts(value);
+
+            this.setState({
+                search: {
+                    ...this.state.search,
+                    isLoading: false,
+                    results: searchResultResponse.posts
+                }
+            })
+        }
+    };
+
+    onUserDropdownChange = (event: SyntheticEvent, {value}: any) => {
         const {logout, history, dispatch} = this.props;
-        if (data.value === '/') { logout(dispatch); }
-        history.push(data.value);
+
+        if (value === '/') {
+            logout(dispatch);
+        }
+
+        history.push(value);
     };
 
     getAuthButtons = () => {
         const {isAuth, user} = this.props;
 
         const options = [
-            {key: 'profile', text: 'Your Profile', value: '/user'},
-            {key: 'sign-out', text: 'Logout', value: '/'},
+                {key: 'profile', text: 'Your Profile', value: '/user'},
+                {key: 'sign-out', text: 'Logout', value: '/'},
             ],
-            trigger = ( <span> <Icon name='user' /> Hello, {user.name} </span> );
+            trigger = (<span> <Icon name='user'/> Hello, {user.name} </span>);
 
         return (
             <div>
@@ -77,7 +116,7 @@ class Header extends Component<IHeaderProps, IHeaderState> {
 
                     <Link to='/post/add'>
                         <Menu.Item>
-                            <Button fluid color={"green"} >Add post</Button>
+                            <Button fluid color={"green"}>Add post</Button>
                         </Menu.Item>
                     </Link>
 
@@ -90,6 +129,8 @@ class Header extends Component<IHeaderProps, IHeaderState> {
     };
 
     render() {
+        const {search} = this.state;
+
         return (
             <div className='header'>
                 <Menu fluid compact size='massive' borderless fixed='top' inverted>
@@ -102,7 +143,13 @@ class Header extends Component<IHeaderProps, IHeaderState> {
                     <Menu.Item><Link to={'/posts'}>Posts</Link></Menu.Item>
 
                     <Menu.Item>
-                        <Input icon='search' placeholder='Search post...' />
+                        <Search
+                            loading={search.isLoading}
+                            onResultSelect={this.onResultSelect}
+                            onSearchChange={this.onSearchChange}
+                            results={search.results}
+                            value={search.value}
+                        />
                     </Menu.Item>
 
                     <Menu.Menu position='right'>

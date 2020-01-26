@@ -9,6 +9,8 @@ export async function notFound( req: Request, res: Response, next: NextFunction 
 }
 
 export async function errorHandler( err: HttpError, req: Request, res: Response, next: NextFunction ) {
+    winstonLogger.error(err);
+
     let errorMsg: string = [
         magenta(`${req.method}`),
         blue(`${req.originalUrl}`),
