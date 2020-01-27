@@ -15,6 +15,7 @@ class PostContainer extends Component<IPostProps> {
 
     render() {
         const {post, displaySetting} = this.props;
+        const {Category: category} = post;
 
         if (!displaySetting.displayFull && post.text.length > displaySetting.maxCharacters) {
             post.text = post.text.substr(0, displaySetting.maxCharacters) + "...";
@@ -28,9 +29,9 @@ class PostContainer extends Component<IPostProps> {
                         <List>
                             <List.Item>
                                 <Image style={{width: '20px'}}
-                                       src={"https://www.freeiconspng.com/uploads/counter-strike-global-offensive-csgo-icon-8.png"}/>
+                                       src={category.imageLink}/>
                                 <List.Content>
-                                    <List.Header>CS GO</List.Header>
+                                    <List.Header>{category.name}</List.Header>
                                 </List.Content>
                             </List.Item>
                         </List>
@@ -52,7 +53,7 @@ class PostContainer extends Component<IPostProps> {
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column width={16}>
-                        <Image src={post.imageLink} size='large' rounded centered/>
+                        <Image src={post.imageLink} style={{width: '500px', height: '250px'}} rounded centered/>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>

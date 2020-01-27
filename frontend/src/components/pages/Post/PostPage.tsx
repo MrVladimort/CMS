@@ -136,7 +136,7 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
             <Grid>
                 <Grid.Column width={2}>
                     <List selection animated verticalAlign='middle' size='huge'>
-                        <List.Item active>
+                        <List.Item>
                             <List.Content>
                                 <List.Header content={"Popular"}/>
                             </List.Content>
@@ -156,7 +156,8 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                         </List.Item>
 
                         {categories && categories.map(category =>
-                            <List.Item key={`category:${category.categoryId}`} onClick={this.onCategoryClick} categoryId={category.categoryId}>
+                            <List.Item key={`category:${category.categoryId}`} onClick={this.onCategoryClick}
+                                       categoryId={category.categoryId}>
                                 <Image avatar src={category.imageLink}/>
                                 <List.Content>
                                     <List.Header content={category.name}/>
@@ -166,17 +167,15 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                 </Grid.Column>
 
                 <Grid.Column width={14}>
-                    <Grid columns={4} divided>
-                        <Grid.Row>
-                            {postsToRender && postsToRender.map(post =>
-                                <Grid.Column key={`post:${post.postId}`} stretched>
-                                    <Segment raised>
-                                        <PostContainer displaySetting={{displayFull: false, maxCharacters: 256}}
-                                                       post={post}/>
-                                    </Segment>
-                                </Grid.Column>
-                            )}
-                        </Grid.Row>
+                    <Grid columns={4}>
+                        {postsToRender && postsToRender.map(post =>
+                            <Grid.Column key={`post:${post.postId}`} stretched>
+                                <Segment raised>
+                                    <PostContainer displaySetting={{displayFull: false, maxCharacters: 256}}
+                                                   post={post}/>
+                                </Segment>
+                            </Grid.Column>
+                        )}
                     </Grid>
                 </Grid.Column>
             </Grid>

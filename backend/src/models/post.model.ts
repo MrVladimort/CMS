@@ -1,6 +1,6 @@
 import {arrayProp, DocumentType, getModelForClass, modelOptions, plugin, prop, Ref, ReturnModelType} from "@typegoose/typegoose";
 import {Category} from "./category.model";
-import {Comment} from "./comment.model";
+import CommentModel, {Comment} from "./comment.model";
 import {AutoIncrement, AutoPopulate} from "./index";
 import {User} from "./user.model";
 
