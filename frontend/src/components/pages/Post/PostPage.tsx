@@ -115,9 +115,9 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
         }
 
         if (sortPopular.active) {
-            filteredAndSortedPosts = sortPopular.direction === "asc" ? filteredAndSortedPosts.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1) : filteredAndSortedPosts.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).reverse()
+            filteredAndSortedPosts = sortPopular.direction === "asc" ? filteredAndSortedPosts.sort((a, b) => a.views - b.views) : filteredAndSortedPosts.sort((a, b) => a.views - b.views).reverse()
         } else if (sortDate.active) {
-            filteredAndSortedPosts = sortDate.direction === "asc" ? filteredAndSortedPosts.sort((a, b) => a.views - b.views) : filteredAndSortedPosts.sort((a, b) => a.views - b.views).reverse()
+            filteredAndSortedPosts = sortDate.direction === "asc" ? filteredAndSortedPosts.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1) : filteredAndSortedPosts.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).reverse()
         }
 
         this.setState({postsToRender: filteredAndSortedPosts})

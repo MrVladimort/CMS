@@ -45,7 +45,7 @@ class PostContainer extends Component<IPostProps> {
                         <p> {post.User.name} {post.User.surname} </p>
                     </Grid.Column>
                     <Grid.Column width={6}>
-                        <cite>{moment(post.createdAt).format("MMMM DD")} </cite>
+                        <cite>{moment(post.createdAt).format("MMMM Do YYYY")} </cite>
                     </Grid.Column>
                 </Grid.Row>
                 }
@@ -71,13 +71,13 @@ class PostContainer extends Component<IPostProps> {
 
                 {!displaySetting.disaplyFull && // gavno
                 <Grid.Row columns={2}>
-                    <Grid.Column width={6} textAlign='left'>
+                    <Grid.Column width={5} textAlign='left' floated="left">
                         <Label>
                             <Icon name='eye'/> {post.views}
                         </Label>
                     </Grid.Column>
 
-                    <Grid.Column width={6} textAlign='left'>
+                    <Grid.Column width={5} textAlign='left' floated="right">
                         <cite>{moment(post.createdAt).format("MMMM Do YYYY")} </cite>
                     </Grid.Column>
                 </Grid.Row>
