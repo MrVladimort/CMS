@@ -156,7 +156,7 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                         </List.Item>
 
                         {categories && categories.map(category =>
-                            <List.Item onClick={this.onCategoryClick} categoryId={category.categoryId}>
+                            <List.Item key={`category:${category.categoryId}`} onClick={this.onCategoryClick} categoryId={category.categoryId}>
                                 <Image avatar src={category.imageLink}/>
                                 <List.Content>
                                     <List.Header content={category.name}/>
@@ -169,10 +169,10 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                     <Grid columns={4} divided>
                         <Grid.Row>
                             {postsToRender && postsToRender.map(post =>
-                                <Grid.Column stretched>
+                                <Grid.Column key={`post:${post.postId}`} stretched>
                                     <Segment raised>
                                         <PostContainer displaySetting={{displayFull: false, maxCharacters: 256}}
-                                                       post={post} key={`post:${post.postId}`}/>
+                                                       post={post}/>
                                     </Segment>
                                 </Grid.Column>
                             )}

@@ -1,27 +1,28 @@
-import React, {Component} from 'react';
+import React, {Component, SyntheticEvent} from 'react';
 import {Form, Container, Header, TextArea, Dropdown} from 'semantic-ui-react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 import ErrorMessage from "../../base/ErrorMessage";
 import userApi from "../../../api/user";
 import steamApi from "../../../api/steam";
+import {CategoryDTO} from "../../../types";
 
 export interface IPostAddFormData {
     text: string,
     imageLink: string,
-    category: object,
+    category: number,
     title: string,
 }
 
 interface IPostAddFormState {
     formData: IPostAddFormData,
-    categories: null,
     errors: any,
     loading: boolean
 }
 
 interface IPostAddFormProps {
-    submit: (formData: IPostAddFormData) => Promise<void>
+    submit: (formData: IPostAddFormData) => Promise<void>,
+    categories: CategoryDTO[],
 }
 
 class PostAddForm extends Component<IPostAddFormProps, IPostAddFormState> {
@@ -34,21 +35,24 @@ class PostAddForm extends Component<IPostAddFormProps, IPostAddFormState> {
             formData: {
                 text: "",
                 imageLink: "",
-                category: null,
+                category: 0,
                 title: "",
             },
-            categories: null,
-            loading: true,
+            loading: false,
             errors: {}
         };
     }
 
-    onChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({
-        formData: {
-            ...this.state.formData,
-            [e.target.name]: e.target.value
-        }
-    });
+    onChange = (e: SyntheticEvent, data: any) => {
+        console.log(data);
+
+        this.setState({
+            formData: {
+                ...this.state.formData,
+                [data.name]: data.value
+            }
+        });
+    };
 
     onSubmit = () => {
         const {formData} = this.state;
@@ -56,18 +60,22 @@ class PostAddForm extends Component<IPostAddFormProps, IPostAddFormState> {
         this.setState({errors});
         if (_.isEmpty(errors)) {
             this.setState({loading: true});
+            console.log(formData);
             this.props.submit(formData)
                 .catch((err: any) => this.setState({errors: {global: err.response.data.error}, loading: false}));
         }
     };
 
-    async componentDidMount(): Promise<void> {
-        const categoriesResponse = await steamApi.getGamesCategories();
+    getCategoriesOptions = () => {
+        const {categories} = this.props;
 
-        if (categoriesResponse) {
-            this.setState({categories: categoriesResponse, loading: false });
-        }
-    }
+        return categories.map(category => ({
+            key: category.categoryId,
+            text: category.name,
+            value: category.categoryId,
+            image: {avatar: true, src: category.imageLink}
+        }));
+    };
 
     validate = (formData: IPostAddFormData) => {
         const errors = {};
@@ -75,7 +83,7 @@ class PostAddForm extends Component<IPostAddFormProps, IPostAddFormState> {
     };
 
     render() {
-        const {formData, errors, loading, categories} = this.state;
+        const {formData, errors, loading} = this.state;
 
         return (
             <Container>
@@ -88,11 +96,14 @@ class PostAddForm extends Component<IPostAddFormProps, IPostAddFormState> {
                     <Form.Input required error={!!errors.imageLink} type='text' id='imageLink' name='imageLink'
                                 placeholder="http://link.com" value={formData.imageLink} onChange={this.onChange}/>
                     <Header as='h5' content='Category *'/>
-                    <Dropdown
+                    <Form.Select
+                        id='category' name='category'
                         placeholder='Select Game Category'
                         fluid
                         selection
-                        options={categories}
+                        options={this.getCategoriesOptions()}
+                        value={formData.category}
+                        onChange={this.onChange}
                     />
                     <Header as='h5' content='Text *'/>
                     <Form.Field required error={!!errors.text} type='text' id='text' name='text'

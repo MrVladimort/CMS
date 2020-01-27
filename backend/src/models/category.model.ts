@@ -25,6 +25,10 @@ export class Category {
         return this.find();
     }
 
+    public static async findOneById(this: ReturnModelType<typeof Category>, categoryId: number | string): Promise<DocumentType<Category>> {
+        return this.findOne({categoryId});
+    }
+
     @prop({unique: true}) public categoryId: number;
     @prop({unique: true}) public name: string;
     @prop({}) public imageLink: string;

@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {validationResult} from "express-validator/check";
 import HttpError from "../errors/http.error";
+import CategoryModel from "../models/category.model";
 import PostModel, {Post} from "../models/post.model";
 import UserModel, {User} from "../models/user.model";
 
@@ -33,6 +34,7 @@ export async function createPost(req: Request, res: Response, next: NextFunction
     const {postData} = req.body;
     const post = new PostModel(postData);
     post.User = await UserModel.findOne({userId: req.user.userId});
+    post.Category = await CategoryModel.findOneById(postData.category);
     await post.save();
 
     res.json({post, success: true, status: 200});
