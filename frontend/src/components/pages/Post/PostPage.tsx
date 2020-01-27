@@ -180,7 +180,7 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                     </List>
                 </Grid.Column>
 
-                <Grid.Column width={14}>
+                <Grid.Column width={13}>
                     <Grid columns={4} verticalAlign='middle'>
                         {postsToRender && postsToRender.map(post =>
                             <Grid.Column key={`post:${post.postId}`} verticalAlign='middle'>
