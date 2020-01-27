@@ -22,7 +22,8 @@ import userApi from "../../../api/user";
 import SegmentLoader from "../../base/SegmentLoader";
 
 interface IUserSteamContainerProps {
-    user: UserDTO
+    user: UserDTO,
+    history: any,
 }
 
 export interface ISteamAddFormData {
@@ -38,6 +39,7 @@ interface ISteamPageState {
     gameRecommendations: any[];
     friendsRecommendations: any[];
     loading: boolean,
+    steamId: string,
     steamTabs: any[any]
 }
 
@@ -58,6 +60,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             loading: true,
             gameRecommendations: [],
             friendsRecommendations: [],
+            steamId: null,
             steamTabs: []
         };
     }
@@ -90,6 +93,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             friends: userFriends,
             lastPlayedGames,
             ownedGames,
+            steamId,
             gameRecommendations: gameRecommendations.recommendations,
             friendsRecommendations: friendsRecommendations.recommendations,
         });
@@ -104,7 +108,6 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                 menuItem: 'Games', render: () => <Tab.Pane>
                     <Header textAlign={"center"} size={"huge"}>Recently Played</Header>
                     <Grid columns={3}>
-                        <Grid.Row>
                             {lastPlayedGames && lastPlayedGames.map(game =>
                                 <Grid.Column>
                                     <Card href={"https://store.steampowered.com/app/" + game.appID}
@@ -120,7 +123,6 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                                     </Card>
                                 </Grid.Column>
                             )}
-                        </Grid.Row>
                     </Grid>
 
                     <Header textAlign={"left"} size={"medium"} style={{paddingBottom: "20px"}}>Most time spend at</Header>
@@ -219,7 +221,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
 
         if (userId && userData.status.commentPermission) {
             await userApi.setSteamId(steamId);
-            await this.loadSteamData(steamId);
+            this.props.history.push("/user");
         }
     };
 
@@ -243,10 +245,10 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
     };
 
     render() {
-        const {steamId} = this.props.user;
-        const {loading, userData, friends, steamTabs} = this.state;
+        const {user} = this.props;
+        const {loading, userData, friends, steamTabs, steamId} = this.state;
 
-        if (steamId == null) {
+        if (!user.steamId && !steamId) {
             return (
                 this.getSteamIdForm()
             );
@@ -299,7 +301,8 @@ UserSteamContainer.propTypes = {
         name: PropTypes.string,
         surname: PropTypes.string,
         email: PropTypes.string
-    })
+    }),
+    history: PropTypes.object
 };
 
 

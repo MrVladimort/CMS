@@ -37,7 +37,6 @@ app.use(errorHandler);
 
 async function main() {
     const server = new Server(app);
-    await initSocket(server);
     await connectToDb();
     await server.listen(serverConfig.port);
     winstonLogger.info(`Server ready and listening on port ${serverConfig.port}`);

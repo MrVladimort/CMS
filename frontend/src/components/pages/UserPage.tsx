@@ -61,7 +61,7 @@ class UserPage extends Component<IUserPageProps, IUserPageState> {
             case 'info':
                 return (<UserInfoContainer isAnotherUser={isAnotherUser} user={user}/>);
             case 'steam':
-                return (<UserSteamContainer user={user}/>);
+                return (<UserSteamContainer history={this.props.history} user={user}/>);
             case 'conversation':
                 return (<UserConversationContainer user={user}/>);
         }

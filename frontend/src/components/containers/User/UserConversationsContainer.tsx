@@ -1,11 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import socketIOClient from "socket.io-client";
 import {ConversationDTO, MessageDTO, UserDTO} from "../../../types"
 import {Container, Grid, Segment, Header} from "semantic-ui-react";
 import config from "../../../config";
-
-const socket = socketIOClient(config.serverHost);
 
 interface IUserConversationContainerProps {
     user: UserDTO
@@ -37,13 +34,6 @@ class UserConversationContainer extends Component<IUserConversationContainerProp
 
     componentDidMount() {
 
-        //Very simply connect to the socket
-        //Listen for data on the "outgoing data" namespace and supply a callback for what to do when we get one. In this case, we set a state variable
-        socket.on("conversation.message", (data: ISocketData) => {
-            const {messages} = this.state;
-            messages.push(data.message);
-            this.setState({messages})
-        });
     }
 
     render() {
