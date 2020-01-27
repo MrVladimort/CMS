@@ -13,7 +13,8 @@ import {
     Feed,
     Modal,
     Input,
-    Button
+    Button,
+    Tab
 } from "semantic-ui-react";
 import steamApi from "../../../api/steam";
 import userApi from "../../../api/user";
@@ -36,6 +37,7 @@ interface ISteamPageState {
     gameRecommendations: any[any],
     loading: boolean,
     steamId: any,
+    steamTabs: any[any]
 }
 
 class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageState> {
@@ -54,7 +56,8 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             ownedGames: null,
             loading: true,
             steamId: null,
-            gameRecommendations: []
+            gameRecommendations: [],
+            steamTabs: []
         };
     }
 
@@ -63,6 +66,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
 
         if (steamId != null) {
             await this.loadSteamData(steamId);
+            await this.loadSteamTabs();
         }
     };
 
@@ -87,6 +91,100 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             steamId: this.state.formData.steamId,
             gameRecommendations
         });
+    };
+
+    loadSteamTabs = async () => {
+        const {lastPlayedGames, ownedGames, friends, gameRecommendations} = this.state;
+
+        console.log(gameRecommendations);
+        const panes = [
+            { menuItem: 'Games', render: () => <Tab.Pane>
+                    <Header textAlign={"center"} size={"huge"}>Recently Played</Header>
+                    <Grid columns={4} divided>
+                        <Grid.Row>
+                            {lastPlayedGames && lastPlayedGames.map(game =>
+                                <Grid.Column>
+                                    <Card href={"https://store.steampowered.com/app/" + game.appID}
+                                          color={"blue"}>
+                                        <Image src={game.logoURL}
+                                               href={"https://store.steampowered.com/app/" + game.appID}
+                                               wrapped/>
+
+                                        <Card.Description>
+                                            <span>Time spent: {(Number(game.playTime) / 60).toFixed()} h</span>
+                                        </Card.Description>
+
+                                    </Card>
+                                </Grid.Column>
+                            )}
+                        </Grid.Row>
+                    </Grid>
+
+                    {ownedGames &&
+                    <Grid textAlign={"center"}>
+                        <Header textAlign={"center"} size={"medium"}>Most time spend at</Header>
+                        <Grid.Row textAlign={"center"}>
+                            {ownedGames.filter(a => Number(a.playTime) > 1).sort((a, b) => (Number(a.playTime) / 60) - (Number(b.playTime) / 60)).reverse().slice(0, 7).map(game =>
+                                <Grid.Column>
+                                    <Feed>
+                                        <Feed.Event>
+                                            <Feed.Label image={game.iconURL}
+                                                        href={"https://store.steampowered.com/app/" + game.appID}/>
+                                        </Feed.Event>
+                                    </Feed>
+                                </Grid.Column>
+                            )}
+                        </Grid.Row>
+                    </Grid>
+                    }
+            </Tab.Pane> },
+            { menuItem: 'Friends', render: () => <Tab.Pane>
+                    <Header textAlign={"center"} size={"huge"}>Friends</Header>
+                    <Grid columns={4}>
+                        <Grid.Row>
+                            {friends && friends.map(friend =>
+                                <Grid.Column stretched>
+                                    <Card href={friend.url}>
+                                        <Feed>
+                                            <Feed.Event>
+                                                <Feed.Label image={friend.avatar}/>
+                                                <Feed.Content>
+                                                    <Feed.Summary content={friend.nickname} />
+                                                </Feed.Content>
+                                            </Feed.Event>
+                                        </Feed>
+                                    </Card>
+                                </Grid.Column>
+                            )}
+                        </Grid.Row>
+                    </Grid>
+                </Tab.Pane> },
+            { menuItem: 'Recommendations', render: () => <Tab.Pane>
+                    <Header textAlign={"center"} size={"huge"}>Games</Header>
+                    <Grid columns={4} divided>
+                        <Grid.Row>
+                            {gameRecommendations.recommendations.length > 0 && gameRecommendations.recommendations.map((game: { header_image: string; short_description: React.ReactNode; steam_appid: string }) =>
+                                <Grid.Column stretched>
+                                    <Card href={"https://store.steampowered.com/app/" + game.steam_appid} fluid>
+                                        <Image src={game.header_image}
+                                               wrapped/>
+                                        <Card.Content>
+                                            <Card.Description>
+                                                {game.short_description}
+                                            </Card.Description>
+                                        </Card.Content>
+                                    </Card>
+                                </Grid.Column>
+                            )}
+                        </Grid.Row>
+                    </Grid>
+                </Tab.Pane> },
+        ];
+
+        this.setState({
+            ...this.state.formData,
+            steamTabs: panes
+        })
     };
 
     onChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({
@@ -128,7 +226,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
 
     render() {
         const {steamId} = this.props.user;
-        const {loading, userData, friends, lastPlayedGames, ownedGames, gameRecommendations} = this.state;
+        const {loading, userData, friends, steamTabs} = this.state;
 
         if (steamId == null) {
             return (
@@ -169,84 +267,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                             </Grid.Column>
 
                             <Grid.Column width={13}>
-                                <Segment>
-                                    <Header textAlign={"center"} size={"huge"}>Recently Played</Header>
-                                    <Grid columns={4} divided>
-                                        <Grid.Row>
-                                            {lastPlayedGames && lastPlayedGames.map(game =>
-                                                <Grid.Column>
-                                                    <Card href={"https://store.steampowered.com/app/" + game.appID}
-                                                          color={"blue"}>
-                                                        <Image src={game.logoURL}
-                                                               href={"https://store.steampowered.com/app/" + game.appID}
-                                                               wrapped/>
-
-                                                        <Card.Description>
-                                                            <span>Time spent: {(Number(game.playTime) / 60).toFixed()} h</span>
-                                                        </Card.Description>
-
-                                                    </Card>
-                                                </Grid.Column>
-                                            )}
-                                        </Grid.Row>
-                                    </Grid>
-
-                                    {ownedGames &&
-                                    <Grid textAlign={"center"}>
-                                        <Header textAlign={"center"} size={"medium"}>Most time spend at</Header>
-                                        <Grid.Row textAlign={"center"}>
-                                            {ownedGames.filter(a => Number(a.playTime) > 1).sort((a, b) => (Number(a.playTime) / 60) - (Number(b.playTime) / 60)).reverse().slice(0, 7).map(game =>
-                                                <Grid.Column>
-                                                    <Feed>
-                                                        <Feed.Event>
-                                                            <Feed.Label image={game.iconURL}
-                                                                        href={"https://store.steampowered.com/app/" + game.appID}/>
-                                                        </Feed.Event>
-                                                    </Feed>
-                                                </Grid.Column>
-                                            )}
-                                        </Grid.Row>
-                                    </Grid>
-                                    }
-
-                                    <Grid textAlign={"center"}>
-                                        <Header size={"small"}>Friends</Header>
-                                        <Grid.Row textAlign={"center"}>
-                                            {friends && friends.map(friend =>
-                                                <Grid.Column>
-                                                    <Feed>
-                                                        <Feed.Event>
-                                                            <Feed.Label image={friend.avatar} href={friend.url}/>
-                                                        </Feed.Event>
-                                                    </Feed>
-                                                </Grid.Column>
-                                            )}
-                                        </Grid.Row>
-                                    </Grid>
-                                </Segment>
-
-                                <Segment>
-                                    <Header textAlign={"center"} size={"huge"}>Game recommendations</Header>
-                                    <Grid columns={3} divided>
-                                        <Grid.Row>
-                                            {gameRecommendations.recommendations.length > 0 && gameRecommendations.recommendations.map((game: { header_image: string; short_description: React.ReactNode; }) =>
-                                                <Grid.Column>
-                                                    <Card href={game.header_image}
-                                                          color={"blue"}>
-                                                        <Image src={game.header_image}
-                                                               href={game.header_image}
-                                                               wrapped/>
-
-                                                        <Card.Description>
-                                                            {game.short_description}
-                                                        </Card.Description>
-
-                                                    </Card>
-                                                </Grid.Column>
-                                            )}
-                                        </Grid.Row>
-                                    </Grid>
-                                </Segment>
+                                <Tab panes={steamTabs}> </Tab>
                             </Grid.Column>
                         </Grid.Row>
                     </Grid>

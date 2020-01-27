@@ -16,9 +16,16 @@ class PostContainer extends Component<IPostProps> {
     render() {
         const {post, displaySetting} = this.props;
         const {Category: category} = post;
+        let style = {width: '400px', height: '250px'};
 
         if (!displaySetting.displayFull && post.text.length > displaySetting.maxCharacters) {
             post.text = post.text.substr(0, displaySetting.maxCharacters) + "...";
+        }
+
+        console.log(displaySetting);
+
+        if (displaySetting.displayFull || displaySetting.maxCharacters > 1000) {
+            style = null;
         }
 
         return (
@@ -53,7 +60,7 @@ class PostContainer extends Component<IPostProps> {
                 </Grid.Row>
                 <Grid.Row>
                     <Grid.Column width={16}>
-                        <Image src={post.imageLink} style={{width: '500px', height: '250px'}} rounded centered/>
+                        <Image src={post.imageLink} style={style} rounded centered/>
                     </Grid.Column>
                 </Grid.Row>
                 <Grid.Row>
@@ -64,7 +71,7 @@ class PostContainer extends Component<IPostProps> {
                     </Grid.Column>
                 </Grid.Row>
 
-                {!displaySetting.disaplyFull && (displaySetting.maxCharacters > 1000 || displaySetting.maxCharacters === 0) && // gavno
+                {!displaySetting.disaplyFull && // gavno
                 <Grid.Row>
                     <Grid.Column width={6} textAlign='left'>
                         <Label>
