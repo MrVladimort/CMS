@@ -43,32 +43,9 @@ class HomePage extends Component<IHomePageProps, IHomePageState> {
 
         return (
             <Grid columns={3} celled="internally">
-                <Grid.Column width={2}>
-                    <List selection animated verticalAlign='middle' size='huge'>
-                        <List.Item active>
-                            <List.Content>
-                                <List.Header content={"Popular"}/>
-                            </List.Content>
-                        </List.Item>
-                        <List.Item>
-                            <List.Content>
-                                <List.Header content={"New"}/>
-                            </List.Content>
-                        </List.Item>
-                    </List>
 
-                    <List selection animated verticalAlign='middle'>
-                        {categories && categories.map(category =>
-                            <List.Item>
-                                <Image avatar src={category.image.src}/>
-                                <List.Content>
-                                    <List.Header content={category.value}/>
-                                </List.Content>
-                            </List.Item>)}
-                    </List>
-                </Grid.Column>
 
-                <Grid.Column width={10}>
+                <Grid.Column width={12}>
                     {posts && posts.map(post =>
                         <Segment raised className='postSegment'>
                             <PostContainer displaySetting={{isDisplayFull: false, maxCharacters: 2000}} post={post} key={`post: ${post.postId}`}/>

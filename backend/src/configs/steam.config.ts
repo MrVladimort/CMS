@@ -5,7 +5,7 @@ export interface ISteamConfig {
 }
 
 const config: ISteamConfig = {
-    key: "FECB43C9E97FA934551F2BB438B9C665",
+    key: "4E3595852B08EB5D92E78B7F88F7935E",
     IdUrl: "https://steamcommunity.com/id/",
     AppUrl: "https://store.steampowered.com/app/",
 };

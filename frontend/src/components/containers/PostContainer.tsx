@@ -39,7 +39,7 @@ class PostContainer extends Component<IPostProps> {
                         <p> {post.User.name} {post.User.surname} </p>
                     </Grid.Column>
                     <Grid.Column width={6}>
-                        <cite>{moment(post.createAt).format("MMMM Mo")} </cite>
+                        <cite>{moment(post.createdAt).format("MMMM Mo")} </cite>
                     </Grid.Column>
                 </Grid.Row>
                 }

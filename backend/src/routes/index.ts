@@ -1,6 +1,7 @@
 import {Application} from "express";
 import {authMiddleware} from "../middlewares/auth.middleware";
 import authRoute from "./auth.route";
+import categoryRoute from "./category.route";
 import commentRoute from "./comment.route";
 import conversationRoute from "./conversation.route";
 import friendRoute from "./friend.route";
@@ -23,4 +24,5 @@ export default function(app: Application) {
     app.use("/api/friends", friendRoute);
     app.use("/api/steam", steamRoute);
     app.use("/api/search", searchRoute);
+    app.use("/api/categories", categoryRoute);
 }

@@ -46,7 +46,6 @@ export interface PostDTO extends AuditingDTO {
     User: UserDTO;
     Category: CategoryDTO;
     views: number;
-    createAt: Date;
     updatedAt: Date;
 }
 
