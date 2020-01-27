@@ -14,7 +14,8 @@ import {
     Modal,
     Input,
     Button,
-    Tab
+    Tab,
+    Item
 } from "semantic-ui-react";
 import steamApi from "../../../api/steam";
 import userApi from "../../../api/user";
@@ -101,7 +102,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             {
                 menuItem: 'Games', render: () => <Tab.Pane>
                     <Header textAlign={"center"} size={"huge"}>Recently Played</Header>
-                    <Grid columns={4} divided>
+                    <Grid columns={3}>
                         <Grid.Row>
                             {lastPlayedGames && lastPlayedGames.map(game =>
                                 <Grid.Column>

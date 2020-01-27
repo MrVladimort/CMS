@@ -22,8 +22,6 @@ class PostContainer extends Component<IPostProps> {
             post.text = post.text.substr(0, displaySetting.maxCharacters) + "...";
         }
 
-        console.log(displaySetting);
-
         if (displaySetting.displayFull || displaySetting.maxCharacters > 1000) {
             style = null;
         }
@@ -47,7 +45,7 @@ class PostContainer extends Component<IPostProps> {
                         <p> {post.User.name} {post.User.surname} </p>
                     </Grid.Column>
                     <Grid.Column width={6}>
-                        <cite>{moment(post.createdAt).format("MMMM Mo")} </cite>
+                        <cite>{moment(post.createdAt).format("MMMM DD")} </cite>
                     </Grid.Column>
                 </Grid.Row>
                 }
@@ -77,9 +75,6 @@ class PostContainer extends Component<IPostProps> {
                         <Label>
                             <Icon name='eye'/> {post.views}
                         </Label>
-                    </Grid.Column>
-                    <Grid.Column width={10} textAlign='right'>
-                        <Rating defaultRating={Math.floor(Math.random() * 5)} maxRating={5} disabled/>
                     </Grid.Column>
                 </Grid.Row>
                 }
