@@ -1,9 +1,10 @@
 import Router from "express-promise-router";
 import {
-    authSeam, checkProfileStatus, checkSteamID, getGamesCategories,
+    authSeam, checkProfileStatus, checkSteamID, getFriendsRecommendations,
+    getGameRecommendations,
+    getGamesCategories,
     getGameStats,
     getLastPlayedGames,
-    getRecommendations,
     getUserGames,
     getUserInfo,
 } from "../controllers/steam.controller";
@@ -17,7 +18,8 @@ router.get("/check/status/:id", checkProfileStatus);
 router.get("/games/recently/:id", getLastPlayedGames);
 router.get("/games/stats/", getGameStats);
 router.get("/games/owned/:id", getUserGames);
-router.get("/games/recommendations/:id", getRecommendations);
+router.get("/recommendations/game/:id", getGameRecommendations);
+router.get("/recommendations/friends/:id", getFriendsRecommendations);
 router.get("/games/categories", getGamesCategories);
 
 export default router;

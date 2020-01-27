@@ -30,13 +30,13 @@ export interface ISteamAddFormData {
 
 interface ISteamPageState {
     formData: ISteamAddFormData,
-    userData: SteamUserDTO | null;
-    friends: SteamFriendUserDTO[] | null
-    lastPlayedGames: SteamGameDTO[] | null
-    ownedGames: SteamGameDTO[] | null,
-    gameRecommendations: any[any],
+    userData: SteamUserDTO;
+    friends: SteamFriendUserDTO[];
+    lastPlayedGames: SteamGameDTO[];
+    ownedGames: SteamGameDTO[];
+    gameRecommendations: any[];
+    friendsRecommendations: any[];
     loading: boolean,
-    steamId: any,
     steamTabs: any[any]
 }
 
@@ -55,8 +55,8 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             lastPlayedGames: null,
             ownedGames: null,
             loading: true,
-            steamId: null,
             gameRecommendations: [],
+            friendsRecommendations: [],
             steamTabs: []
         };
     }
@@ -75,11 +75,12 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             loading: true
         });
 
-        const [{user, userFriends}, lastPlayedGames, ownedGames, gameRecommendations] = await Promise.all([
+        const [{user, userFriends}, lastPlayedGames, ownedGames, gameRecommendations, friendsRecommendations] = await Promise.all([
             steamApi.getUserData(steamId),
             steamApi.getLastPlayedGames(steamId),
             steamApi.getOwnedGames(steamId),
-            steamApi.getRecommendations(steamId),
+            steamApi.getGameRecommendations(steamId),
+            steamApi.getFriendsRecommendations(steamId),
         ]);
 
         this.setState({
@@ -88,17 +89,17 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
             friends: userFriends,
             lastPlayedGames,
             ownedGames,
-            steamId: this.state.formData.steamId,
-            gameRecommendations
+            gameRecommendations: gameRecommendations.recommendations,
+            friendsRecommendations: friendsRecommendations.recommendations,
         });
     };
 
     loadSteamTabs = async () => {
-        const {lastPlayedGames, ownedGames, friends, gameRecommendations} = this.state;
+        const {lastPlayedGames, ownedGames, friends, gameRecommendations, friendsRecommendations} = this.state;
 
-        console.log(gameRecommendations);
         const panes = [
-            { menuItem: 'Games', render: () => <Tab.Pane>
+            {
+                menuItem: 'Games', render: () => <Tab.Pane>
                     <Header textAlign={"center"} size={"huge"}>Recently Played</Header>
                     <Grid columns={4} divided>
                         <Grid.Row>
@@ -137,11 +138,12 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                         </Grid.Row>
                     </Grid>
                     }
-            </Tab.Pane> },
-            { menuItem: 'Friends', render: () => <Tab.Pane>
+                </Tab.Pane>
+            },
+            {
+                menuItem: 'Friends', render: () => <Tab.Pane>
                     <Header textAlign={"center"} size={"huge"}>Friends</Header>
                     <Grid columns={4}>
-                        <Grid.Row>
                             {friends && friends.map(friend =>
                                 <Grid.Column stretched>
                                     <Card href={friend.url}>
@@ -149,42 +151,57 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                                             <Feed.Event>
                                                 <Feed.Label image={friend.avatar}/>
                                                 <Feed.Content>
-                                                    <Feed.Summary content={friend.nickname} />
+                                                    <Feed.Summary content={friend.nickname}/>
                                                 </Feed.Content>
                                             </Feed.Event>
                                         </Feed>
                                     </Card>
                                 </Grid.Column>
                             )}
-                        </Grid.Row>
                     </Grid>
-                </Tab.Pane> },
-            { menuItem: 'Recommendations', render: () => <Tab.Pane>
+                </Tab.Pane>
+            },
+            {
+                menuItem: 'Recommendations', render: () => <Tab.Pane>
                     <Header textAlign={"center"} size={"huge"}>Games</Header>
                     <Grid columns={4} divided>
-                        <Grid.Row>
-                            {gameRecommendations.recommendations.length > 0 && gameRecommendations.recommendations.map((game: { header_image: string; short_description: React.ReactNode; steam_appid: string }) =>
-                                <Grid.Column stretched>
-                                    <Card href={"https://store.steampowered.com/app/" + game.steam_appid} fluid>
-                                        <Image src={game.header_image}
-                                               wrapped/>
-                                        <Card.Content>
-                                            <Card.Description>
-                                                {game.short_description}
-                                            </Card.Description>
-                                        </Card.Content>
-                                    </Card>
-                                </Grid.Column>
-                            )}
-                        </Grid.Row>
+                        {gameRecommendations.length > 0 && gameRecommendations.map((game: { header_image: string; short_description: React.ReactNode; steam_appid: string }) =>
+                            <Grid.Column stretched>
+                                <Card href={"https://store.steampowered.com/app/" + game.steam_appid} fluid>
+                                    <Image src={game.header_image}
+                                           wrapped/>
+                                    <Card.Content>
+                                        <Card.Description>
+                                            {game.short_description}
+                                        </Card.Description>
+                                    </Card.Content>
+                                </Card>
+                            </Grid.Column>
+                        )}
                     </Grid>
-                </Tab.Pane> },
+
+                    <Header textAlign={"center"} size={"huge"}>Friends</Header>
+                    <Grid columns={4}>
+                        {friendsRecommendations && friendsRecommendations.map(friend =>
+                            <Grid.Column stretched>
+                                <Card href={friend.url}>
+                                    <Feed>
+                                        <Feed.Event>
+                                            <Feed.Label image={friend.avatar}/>
+                                            <Feed.Content>
+                                                <Feed.Summary content={friend.nickname}/>
+                                            </Feed.Content>
+                                        </Feed.Event>
+                                    </Feed>
+                                </Card>
+                            </Grid.Column>
+                        )}
+                    </Grid>
+                </Tab.Pane>
+            },
         ];
 
-        this.setState({
-            ...this.state.formData,
-            steamTabs: panes
-        })
+        this.setState({steamTabs: panes})
     };
 
     onChange = (e: React.ChangeEvent<HTMLInputElement>) => this.setState({

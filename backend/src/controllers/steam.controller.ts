@@ -6,6 +6,7 @@ import {
     getRecentlyPlayedGames,
     getSteamID64, getUserData,
     getUserOwnedGames,
+    getUserRecommendations,
     getUserStats,
 } from "../services/steam.service";
 
@@ -101,10 +102,20 @@ export async function getUserGames(req: Request, res: Response, next: NextFuncti
     }
 }
 
-export async function getRecommendations(req: Request, res: Response, next: NextFunction) {
+export async function getGameRecommendations(req: Request, res: Response, next: NextFunction) {
     try {
         const userId = req.params.id;
         const recommendations = await getGamesRecommendations(userId);
+        res.json({recommendations, success: true, status: 200});
+    } catch (error) {
+        next(error);
+    }
+}
+
+export async function getFriendsRecommendations(req: Request, res: Response, next: NextFunction) {
+    try {
+        const userId = req.params.id;
+        const recommendations = await getUserRecommendations(userId);
         res.json({recommendations, success: true, status: 200});
     } catch (error) {
         next(error);

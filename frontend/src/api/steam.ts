@@ -8,6 +8,7 @@ export default {
     getUserData: (userId: string | number) => axios.get(`${mainConfig.apiHost}/steam/${userId}`).then(res => res.data),
     getLastPlayedGames: (userId: string | number) => axios.get(`${mainConfig.apiHost}/steam/games/recently/${userId}`).then(res => res.data),
     getOwnedGames: (userId: string | number) => axios.get(`${mainConfig.apiHost}/steam/games/owned/${userId}`).then(res => res.data),
-    getRecommendations: (userId: string | number) => axios.get(`${mainConfig.apiHost}/steam/games/recommendations/${userId}`).then(res => res.data),
+    getGameRecommendations: (userId: string | number) => axios.get(`${mainConfig.apiHost}/steam/recommendations/game/${userId}`).then(res => res.data),
+    getFriendsRecommendations: (userId: string | number) => axios.get(`${mainConfig.apiHost}/steam/recommendations/friends/${userId}`).then(res => res.data),
     getGamesCategories: () => axios.get(`${mainConfig.apiHost}/steam/games/categories`).then(res => res.data),
 }

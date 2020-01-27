@@ -7,7 +7,7 @@ import * as recommendationService from "./recommendations.service";
 
 export const getSteamID64 = (userId: string) => steam.resolve(steamConfig.IdUrl + userId);
 
-export const getUserData = (userId: string) => steam.getUserSummary(userId);
+export const getUserData = (userId: string | number) => steam.getUserSummary(userId);
 
 export const getConvertedUserData = async (userId: string) => {
     const userData = await getUserData(userId);
@@ -71,8 +71,15 @@ export const getGamesRecommendations = async (userId: string) => {
 
 export const getUserRecommendations = async (userId: string) => {
     const ID64 = await getSteamID64(userId);
-    const gamesIds = await recommendationService.getUserRecommendations(ID64);
-    return await Promise.all(gamesIds.map(async (gameId: number) => getGameDetails(gameId)).filter((game: any) => game != null));
+    const userIds = await recommendationService.getUserRecommendations(ID64);
+    return await Promise.all(userIds.map(async (id: number) => {
+        const user = await getUserData(id);
+        return {
+            nickname: user.nickname,
+            avatar: user.avatar.large,
+            url: user.url,
+        };
+    }));
 };
 
 const getGameDetails = async (gameId: number) => {

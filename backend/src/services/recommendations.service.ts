@@ -15,7 +15,7 @@ export async function authorize(): Promise<any> {
 }
 
 export async function getUserRecommendations(steamUserId: number): Promise<number[]> {
-    return await axios.get(`http://anfatum.pythonanywhere.com/recommend/users/${steamUserId}`).then((res) => res.data.games);
+    return await axios.get(`http://anfatum.pythonanywhere.com/recommend/users/${steamUserId}`).then((res) => res.data.users);
 }
 
 export async function getGamesRecommendations(steamUserId: number): Promise<number[]> {
