@@ -120,8 +120,6 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
             filteredAndSortedPosts = sortDate.direction === "asc" ? filteredAndSortedPosts.sort((a, b) => a.views - b.views) : filteredAndSortedPosts.sort((a, b) => a.views - b.views).reverse()
         }
 
-        console.log(sortPopular, sortDate);
-
         this.setState({postsToRender: filteredAndSortedPosts})
     };
 

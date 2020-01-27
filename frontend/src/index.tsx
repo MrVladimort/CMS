@@ -21,11 +21,9 @@ async function init() {
         const token = localStorage.getItem('CMS_pro');
         if (token) {
             setAuthorizationHeader(token);
-            console.log(token);
             await authActions.loginAccessToken(token, store.dispatch);
         }
     } catch (err) {
-        console.log(err);
         localStorage.removeItem("CMS_pro");
         setAuthorizationHeader();
     }

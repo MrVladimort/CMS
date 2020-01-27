@@ -44,8 +44,6 @@ class PostAddForm extends Component<IPostAddFormProps, IPostAddFormState> {
     }
 
     onChange = (e: SyntheticEvent, data: any) => {
-        console.log(data);
-
         this.setState({
             formData: {
                 ...this.state.formData,
@@ -60,7 +58,6 @@ class PostAddForm extends Component<IPostAddFormProps, IPostAddFormState> {
         this.setState({errors});
         if (_.isEmpty(errors)) {
             this.setState({loading: true});
-            console.log(formData);
             this.props.submit(formData)
                 .catch((err: any) => this.setState({errors: {global: err.response.data.error}, loading: false}));
         }

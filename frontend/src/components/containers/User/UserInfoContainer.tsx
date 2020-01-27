@@ -36,9 +36,6 @@ class UserInfoContainer extends Component<IUserInfoContainerProps, IUserInfoCont
 
     async componentDidMount(): Promise<void> {
         const [friendsRequestResponse, friendsResponse, userPostsResponse] = await Promise.all([userApi.getFriendsRequest(), userApi.getFriends(), postApi.getUserPosts(this.props.user.userId)]);
-        console.log(friendsResponse);
-        console.log(friendsRequestResponse);
-        console.log(userPostsResponse);
         this.setState({
             friends: friendsResponse.friends,
             friendsRequest: friendsRequestResponse.friends,

@@ -43,7 +43,6 @@ class CommitAddForm extends Component<ICommentFormProps, ICommentFormState> {
     });
 
     handleRate = (e: any, {rating, maxRating}: any) => {
-        console.log(rating, maxRating);
         this.setState({
             formData: {
                 ...this.state.formData,

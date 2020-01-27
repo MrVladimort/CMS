@@ -15,7 +15,6 @@ class DateInput extends Component {
     onChangeDatepicker = e => {
         const {onChange, parentName} = this.props;
         this.setState({ value: e });
-        console.log(e);
         if (e) onChange(parentName, moment(e).format("dd-mm-yyyy"));
     };
 

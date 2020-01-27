@@ -45,7 +45,6 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
 
     submitCreateComment = async (formData: ICommentFormData): Promise<void> => {
         const {post, comments} = this.state;
-        console.log(formData);
         const commentResponse = await commentApi.createComment(formData, post.postId);
         comments.unshift(commentResponse.comment);
         this.setState({comments});
@@ -53,7 +52,6 @@ class PostExactPage extends React.Component<IPostExactPageProps, IPostExactPageS
 
     // @ts-ignore
     handleCheckbox = (e, checkbox) => {
-        console.log(checkbox.checked);
         this.setState({collapsed: checkbox.checked});
     };
 
