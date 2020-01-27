@@ -67,7 +67,7 @@ class Header extends Component<IHeaderProps, IHeaderState> {
                     title: post.title,
                     image: post.imageLink,
                     postId: post.postId
-                }) );
+                }));
 
             this.setState({
                 search: {
@@ -79,13 +79,9 @@ class Header extends Component<IHeaderProps, IHeaderState> {
         }
     };
 
-    onUserDropdownChange = (event: SyntheticEvent, {value}: any) => {
+    onLogoutClick = (event: SyntheticEvent, {value}: any) => {
         const {logout, history, dispatch} = this.props;
-
-        if (value === '/') {
-            logout(dispatch);
-        }
-
+        logout(dispatch);
         history.push(value);
     };
 
@@ -122,7 +118,14 @@ class Header extends Component<IHeaderProps, IHeaderState> {
                     </Link>
 
                     <Menu.Item>
-                        <Dropdown trigger={trigger} options={options} onChange={this.onUserDropdownChange}/>
+                        <Dropdown trigger={trigger}>
+                            <Dropdown.Menu>
+
+                                    <Dropdown.Item content="Your profile" onClick={() => this.props.history.push("/user")}/>
+
+                                <Dropdown.Item content="Log Out" onClick={this.onLogoutClick}/>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Menu.Item>
                 </Menu.Menu>}
             </div>
