@@ -217,11 +217,11 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
     setSteamId = async () => {
         const steamId = this.state.formData.steamId;
 
-        const [{userId}, userData] = await Promise.all([steamApi.checkSteamId(steamId), steamApi.checkProfileStatus(steamId)]);
+        const {userId} = await steamApi.checkSteamId(steamId);
 
-        if (userId && userData.status.commentPermission) {
+        if (userId) {
             await userApi.setSteamId(steamId);
-            this.props.history.push("/user");
+            window.location.reload();
         }
     };
 
