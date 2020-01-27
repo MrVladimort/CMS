@@ -98,6 +98,7 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
     loadSteamTabs = async () => {
         const {lastPlayedGames, ownedGames, friends, gameRecommendations, friendsRecommendations} = this.state;
 
+        // @ts-ignore
         const panes = [
             {
                 menuItem: 'Games', render: () => <Tab.Pane>
@@ -122,21 +123,24 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                         </Grid.Row>
                     </Grid>
 
+                    <Header textAlign={"left"} size={"medium"} style={{paddingBottom: "20px"}}>Most time spend at</Header>
                     {ownedGames &&
-                    <Grid textAlign={"center"}>
-                        <Header textAlign={"center"} size={"medium"}>Most time spend at</Header>
-                        <Grid.Row textAlign={"center"}>
+                    <Grid>
+                        <Feed>
                             {ownedGames.filter(a => Number(a.playTime) > 1).sort((a, b) => (Number(a.playTime) / 60) - (Number(b.playTime) / 60)).reverse().slice(0, 7).map(game =>
-                                <Grid.Column>
-                                    <Feed>
-                                        <Feed.Event>
-                                            <Feed.Label image={game.iconURL}
-                                                        href={"https://store.steampowered.com/app/" + game.appID}/>
-                                        </Feed.Event>
-                                    </Feed>
-                                </Grid.Column>
+                                <Feed.Event href={"https://store.steampowered.com/app/" + game.appID}>
+                                    <Feed.Label>
+                                        <img src={game.iconURL}/>
+                                    </Feed.Label>
+                                    <Feed.Content>
+                                        <Feed.Summary>
+                                            <Feed.User>{game.name}</Feed.User>
+                                            <Feed.Date>{(Number(game.playTime) / 60).toFixed()} h</Feed.Date>
+                                        </Feed.Summary>
+                                    </Feed.Content>
+                                </Feed.Event>
                             )}
-                        </Grid.Row>
+                        </Feed>
                     </Grid>
                     }
                 </Tab.Pane>
@@ -145,20 +149,18 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                 menuItem: 'Friends', render: () => <Tab.Pane>
                     <Header textAlign={"center"} size={"huge"}>Friends</Header>
                     <Grid columns={4}>
-                            {friends && friends.map(friend =>
-                                <Grid.Column stretched>
-                                    <Card href={friend.url}>
-                                        <Feed>
-                                            <Feed.Event>
-                                                <Feed.Label image={friend.avatar}/>
-                                                <Feed.Content>
-                                                    <Feed.Summary content={friend.nickname}/>
-                                                </Feed.Content>
-                                            </Feed.Event>
-                                        </Feed>
-                                    </Card>
-                                </Grid.Column>
-                            )}
+                        {friends && friends.map(friend =>
+                            <Grid.Column stretched>
+                                <Feed href={friend.url}>
+                                    <Feed.Event>
+                                        <Feed.Label image={friend.avatar}/>
+                                        <Feed.Content>
+                                            <Feed.Summary content={friend.nickname}/>
+                                        </Feed.Content>
+                                    </Feed.Event>
+                                </Feed>
+                            </Grid.Column>
+                        )}
                     </Grid>
                 </Tab.Pane>
             },
@@ -185,16 +187,14 @@ class UserSteamContainer extends Component<IUserSteamContainerProps, ISteamPageS
                     <Grid columns={4}>
                         {friendsRecommendations && friendsRecommendations.map(friend =>
                             <Grid.Column stretched>
-                                <Card href={friend.url}>
-                                    <Feed>
-                                        <Feed.Event>
-                                            <Feed.Label image={friend.avatar}/>
-                                            <Feed.Content>
-                                                <Feed.Summary content={friend.nickname}/>
-                                            </Feed.Content>
-                                        </Feed.Event>
-                                    </Feed>
-                                </Card>
+                                <Feed href={friend.url}>
+                                    <Feed.Event>
+                                        <Feed.Label image={friend.avatar}/>
+                                        <Feed.Content>
+                                            <Feed.Summary content={friend.nickname}/>
+                                        </Feed.Content>
+                                    </Feed.Event>
+                                </Feed>
                             </Grid.Column>
                         )}
                     </Grid>

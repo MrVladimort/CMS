@@ -3,7 +3,7 @@ import {connect} from "react-redux";
 import postApi from "../../../api/post";
 import categoryApi from "../../../api/category";
 import {CategoryDTO, PostDTO} from "../../../types";
-import {Button, Grid, Icon, Image, List, Segment} from "semantic-ui-react";
+import {Button, Grid, Icon, Image, List, Segment, GridRow} from "semantic-ui-react";
 import PostContainer from "../../containers/PostContainer";
 import {SyntheticEvent} from "react";
 import {string} from "prop-types";
@@ -180,10 +180,10 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                     </List>
                 </Grid.Column>
 
-                <Grid.Column width={13}>
-                    <Grid columns={4}>
+                <Grid.Column width={14}>
+                    <Grid columns={4} verticalAlign='middle'>
                         {postsToRender && postsToRender.map(post =>
-                            <Grid.Column key={`post:${post.postId}`} stretched>
+                            <Grid.Column key={`post:${post.postId}`} verticalAlign='middle'>
                                 <Segment raised>
                                     <PostContainer displaySetting={{displayFull: false, maxCharacters: 256}}
                                                    post={post}/>
