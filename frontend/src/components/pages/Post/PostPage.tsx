@@ -3,9 +3,10 @@ import {connect} from "react-redux";
 import postApi from "../../../api/post";
 import categoryApi from "../../../api/category";
 import {CategoryDTO, PostDTO} from "../../../types";
-import {Grid, Image, List, Segment} from "semantic-ui-react";
+import {Button, Grid, Icon, Image, List, Segment} from "semantic-ui-react";
 import PostContainer from "../../containers/PostContainer";
 import {SyntheticEvent} from "react";
+import {string} from "prop-types";
 
 interface IEventPageState {
     posts: PostDTO[],
@@ -18,16 +19,14 @@ interface IEventPageState {
 
     },
 
-    sort: {
-        popular: {
-            active: boolean,
-            inverse: boolean
-        },
-        date: {
-            active: boolean,
-            inverse: boolean
-        },
-    }
+    sortPopular: {
+        active: boolean,
+        direction: string,
+    },
+    sortDate: {
+        active: boolean,
+        direction: string,
+    },
 }
 
 interface IEventPageProps {
@@ -51,18 +50,17 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                 category: null,
             },
 
-            sort: {
-                popular: {
-                    active: false,
-                    inverse: false
-                },
-                date: {
-                    active: false,
-                    inverse: false
-                },
-            }
+            sortPopular: {
+                active: false,
+                direction: "",
+            },
+            sortDate: {
+                active: false,
+                direction: "",
+            },
         }
     }
+
 
     componentDidMount = async () => {
         const [postsResponse, categoryResponse] = await Promise.all([postApi.getAllPosts(), categoryApi.getCategories()]);
@@ -97,20 +95,18 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
         this.filterAndSort();
     };
 
-    onPopularClick = () => {
-        const {sort} = this.state;
-        this.setState({sort: {...sort, popular: {...sort.popular, active: !sort.popular.active}}});
+    onPopularClick = async (e: SyntheticEvent, data: any) => {
+        await this.setState({sortPopular: {active: true, direction: data.name}, sortDate: {active: false, direction: ""}});
         this.filterAndSort();
     };
 
-    onNewClick = () => {
-        const {sort} = this.state;
-        this.setState({sort: {...sort, date: {...sort.date, active: !sort.date.active}}});
+    onNewClick = async (e: SyntheticEvent, data: any) => {
+        await this.setState({sortDate: {active: true, direction: data.name}, sortPopular: {active: false, direction: ""}});
         this.filterAndSort();
     };
 
     filterAndSort = () => {
-        const {posts, filter, sort} = this.state;
+        const {posts, filter, sortPopular, sortDate} = this.state;
 
         let filteredAndSortedPosts: PostDTO[] = [...posts];
 
@@ -118,13 +114,13 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
             filteredAndSortedPosts = posts.filter(post => post.Category.categoryId === filter.category.categoryId);
         }
 
-        if (sort.popular.active && sort.date.active) {
-            filteredAndSortedPosts = filteredAndSortedPosts.sort((a, b) => a.views - b.views || (a.createdAt > b.createdAt ? 1 : -1))
-        } else if (sort.popular.active) {
-            filteredAndSortedPosts = filteredAndSortedPosts.sort((a, b) => a.views - b.views)
-        } else if (sort.date.active) {
-            filteredAndSortedPosts = filteredAndSortedPosts.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1)
+        if (sortPopular.active) {
+            filteredAndSortedPosts = sortPopular.direction === "asc" ? filteredAndSortedPosts.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1) : filteredAndSortedPosts.sort((a, b) => a.createdAt > b.createdAt ? 1 : -1).reverse()
+        } else if (sortDate.active) {
+            filteredAndSortedPosts = sortDate.direction === "asc" ? filteredAndSortedPosts.sort((a, b) => a.views - b.views) : filteredAndSortedPosts.sort((a, b) => a.views - b.views).reverse()
         }
+
+        console.log(sortPopular, sortDate);
 
         this.setState({postsToRender: filteredAndSortedPosts})
     };
@@ -134,16 +130,36 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
 
         return (
             <Grid>
-                <Grid.Column width={2}>
+                <Grid.Column width={3}>
                     <List selection animated verticalAlign='middle' size='huge'>
                         <List.Item>
-                            <List.Content>
+                            <List.Content verticalAlign='middle' floated="left">
                                 <List.Header content={"Popular"}/>
+                            </List.Content>
+                            <List.Content verticalAlign='middle' floated="right">
+                                <Button.Group icon>
+                                    <Button name="asc" onClick={this.onPopularClick}>
+                                        <Icon name='arrow up'/>
+                                    </Button>
+                                    <Button name="desc" onClick={this.onPopularClick}>
+                                        <Icon name='arrow down'/>
+                                    </Button>
+                                </Button.Group>
                             </List.Content>
                         </List.Item>
                         <List.Item>
-                            <List.Content>
+                            <List.Content verticalAlign='middle' floated="left">
                                 <List.Header content={"New"}/>
+                            </List.Content>
+                            <List.Content verticalAlign='middle' floated="right">
+                                <Button.Group icon>
+                                    <Button name="asc" onClick={this.onNewClick}>
+                                        <Icon name='arrow up'/>
+                                    </Button>
+                                    <Button name="desc" onClick={this.onNewClick}>
+                                        <Icon name='arrow down'/>
+                                    </Button>
+                                </Button.Group>
                             </List.Content>
                         </List.Item>
                     </List>
@@ -166,7 +182,7 @@ class PostPage extends React.Component<IEventPageProps, IEventPageState> {
                     </List>
                 </Grid.Column>
 
-                <Grid.Column width={14}>
+                <Grid.Column width={13}>
                     <Grid columns={4}>
                         {postsToRender && postsToRender.map(post =>
                             <Grid.Column key={`post:${post.postId}`} stretched>

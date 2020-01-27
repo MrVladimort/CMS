@@ -70,11 +70,15 @@ class PostContainer extends Component<IPostProps> {
                 </Grid.Row>
 
                 {!displaySetting.disaplyFull && // gavno
-                <Grid.Row>
+                <Grid.Row columns={2}>
                     <Grid.Column width={6} textAlign='left'>
                         <Label>
                             <Icon name='eye'/> {post.views}
                         </Label>
+                    </Grid.Column>
+
+                    <Grid.Column width={6} textAlign='left'>
+                        <cite>{moment(post.createdAt).format("MMMM Do YYYY")} </cite>
                     </Grid.Column>
                 </Grid.Row>
                 }

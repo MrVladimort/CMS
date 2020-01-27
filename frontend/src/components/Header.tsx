@@ -120,9 +120,7 @@ class Header extends Component<IHeaderProps, IHeaderState> {
                     <Menu.Item>
                         <Dropdown trigger={trigger}>
                             <Dropdown.Menu>
-
-                                    <Dropdown.Item content="Your profile" onClick={() => this.props.history.push("/user")}/>
-
+                                <Dropdown.Item content="Your profile" onClick={() => this.props.history.push("/user")}/>
                                 <Dropdown.Item content="Log Out" onClick={this.onLogoutClick}/>
                             </Dropdown.Menu>
                         </Dropdown>
